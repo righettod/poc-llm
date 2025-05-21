@@ -21,7 +21,7 @@
 * Ollama model [gemma3:1b](https://ollama.com/library/gemma3:1b): To have small model using only TEXT data.
 * [LangChain4j](https://docs.langchain4j.dev/): To get the more nearest possible approach of the LLM concepts in the implementation of the labs.
 
-## Run the lab
+## Run the labs
 
 💻 Step 1 in a shell window:
 
@@ -65,6 +65,8 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 
 ## References used
 
+### Website
+
 * https://docs.langchain4j.dev/integrations/language-models/ollama
 * https://docs.langchain4j.dev/integrations/language-models/ollama#parameters
 * https://docs.langchain4j.dev/category/tutorials
@@ -72,4 +74,9 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 * https://docs.langchain4j.dev/tutorials/rag
 * https://docs.langchain4j.dev/tutorials/tools
 * https://glaforge.dev/posts/2025/02/27/pretty-print-markdown-on-the-console/
+
+### Book
+
+* [Artificial Intelligence for Dummies](https://www.amazon.fr/dp/1394270712).
+* [AI Engineering: Building Applications with Foundation Models](https://www.amazon.fr/dp/1098166302).
 
