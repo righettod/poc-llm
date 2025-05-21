@@ -21,10 +21,24 @@
 * Ollama model [gemma3:1b](https://ollama.com/library/gemma3:1b): To have small model using only TEXT data.
 * [LangChain4j](https://docs.langchain4j.dev/): To get the more nearest possible approach of the LLM concepts in the implementation of the labs.
 
-📍Before to start the labs, start the model via `ollama run gemma3:1b` then, once the labs is started, you can call the model via the following HTTP request:
+## Run the lab
+
+💻 Step 1 in a shell window:
 
 ```bash
-curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://localhost:8080/ask
+$ ollama run gemma3:1b
+```
+
+💻 Step 2 in another shell window:
+
+```bash
+$ mvn spring-boot:run
+```
+
+💻 Now you can call the model via the following HTTP request in another shell window:
+
+```bash
+$ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://localhost:8080/ask
 ```
 ## Potential security weaknesses identified
 
