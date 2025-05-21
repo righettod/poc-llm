@@ -2,7 +2,7 @@
 
 ![Status](https://img.shields.io/badge/Status-Study_In_Progress-blue?style=flat)
 
-![PackageLabsJar](https://github.com/righettod/poc-llm/actions/workflows/build.yml/badge.svg?branch=main)]
+![PackageLabsJar](https://github.com/righettod/poc-llm/actions/workflows/build.yml/badge.svg?branch=main)
 
 ## Objective
 
