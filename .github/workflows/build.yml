@@ -1,4 +1,4 @@
-name: Package
+name: PackageLabsJar
 on:
   push:
     branches: [ "main" ]
