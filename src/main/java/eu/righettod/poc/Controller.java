@@ -1,5 +1,7 @@
 package eu.righettod.poc;
 
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.segment.TextSegment;
@@ -88,6 +90,7 @@ public class Controller {
                 .chatModel(model)
                 .chatMemory(chatMemory)
                 .contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore))
+                .tools(new CustomTools())
                 .build();
 
         logger.info("[INIT] Chat proxy ready.");

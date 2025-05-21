@@ -50,6 +50,8 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 
 🐞If a malicious content was present into the data used to train the LLM or to enrich it via RAG then it is possible that such content be returned by the LLM and, then, can be triggered depending on how the app uses the response of the LLM.
 
+🐞When custom functions are used, a caller can use instructions into its *UserMessage* to call functions with a malicious parameter to abuse the function processing for different kinds of injections (SQLI, XSS, etc).
+
 ### Information disclosure
 
 🐞If an LLM provided by an external provider is used, with RAG enriched with private documents, then private information will be shared with the LLM provider.
@@ -62,6 +64,9 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 
 🐞In the same way, a huge *UserMessage* will be sent to the LLM that can cause extra cost due to the number of tokens present into the *UserMessage*.
 
+### Authorization issue
+
+🐞When custom functions are used, a caller can use instructions into its *UserMessage* to call functions that it is not expected to be able to call.
 
 ## References used
 
