@@ -12,6 +12,9 @@
 
 ## Labs
 
+> [!CAUTION]
+> **gemma3:1b** model does not support tools so I need to use **llama3.1:latest** model instead.
+
 🔬A labs has been created in order to study the different issues. This one take the context of a Chat model using RAG to get information about [Data Breach Investigations Report](https://www.verizon.com/business/resources/reports/dbir/) from the company [Verizon](https://www.verizon.com).
 
 🧑‍💻The labs was developed using [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) and is maven based.
