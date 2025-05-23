@@ -20,25 +20,28 @@
 🧑‍💻The labs was developed using [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/) and is maven based.
 
 📖Technology stack of the labs:
-* [Ollama](https://ollama.com/): To have a local LLM engine.
-* Ollama model [gemma3:1b](https://ollama.com/library/gemma3:1b): To have small model using only TEXT data.
-* [LangChain4j](https://docs.langchain4j.dev/): To get the more nearest possible approach of the LLM concepts in the implementation of the labs.
+* [Ollama](https://ollama.com/)
+  * To have a local LLM engine.
+* Ollama model [llama3.1:latest](https://ollama.com/library/llama3.1)
+  * To have *small model* using only TEXT data.
+* [LangChain4j](https://docs.langchain4j.dev/)
+  * To get the more nearest possible approach of the LLM concepts in the implementation of the labs.
 
 ## Run the labs
 
 💻 Step 1 in a shell window:
 
 ```bash
-$ ollama run gemma3:1b
+$ ollama run llama3.1:latest
 ```
 
-💻 Step 2 in another shell window:
+💻 Step 2 in another shell window or use the run configuration **StartLabs** from **Intellij IDEA**:
 
 ```bash
 $ mvn spring-boot:run
 ```
 
-💻 Now you can call the model via the following HTTP request in another shell window:
+💻 Now you can call the model via the following HTTP request in another shell window or use the script [client.ps1](client.ps1):
 
 ```bash
 $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://localhost:8080/ask
@@ -55,9 +58,13 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 
 🐞If a malicious content was present into the data used to train the LLM or to enrich it via RAG then it is possible that such content be returned by the LLM and, then, can be triggered depending on how the app uses the response of the LLM.
 
+🐞When custom functions are used, a caller can use instructions into its *UserMessage* to call functions with a malicious parameter to abuse the function processing to retrieve malicious content from a location controlled by the attacker. Such malicious content can be triggered depending on how the app uses the response of the LLM.
+
 ### Information disclosure
 
 🐞If an LLM provided by an external provider is used, with RAG enriched with private documents, then private information will be shared with the LLM provider.
+
+🐞When custom functions are used, a caller can use instructions into its *UserMessage* to call functions in order to discover potential hidden functions based on a [discrepancy factor](https://cwe.mitre.org/data/definitions/204.html) in the response.
 
 ### Resource exhaustion
 
@@ -67,9 +74,13 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 
 🐞In the same way, a huge *UserMessage* will be sent to the LLM that can cause extra cost due to the number of tokens present into the *UserMessage*.
 
+🐞When custom functions are used, a caller can use instructions into its *UserMessage* to call functions in order to cause the LLM to request many custom functions call to the app handling the call and then overflow it.
+
 ### Authorization issue
 
 🐞When custom functions are used, a caller can use instructions into its *UserMessage* to call functions that it is not expected to be able to call.
+
+🐞Depending on how chat session are isolated between users, it could be possible from the user A to hijack the chat session of the user B and then retrieve its chat history. 
 
 ## References used
 
@@ -81,6 +92,7 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 * https://docs.langchain4j.dev/tutorials/model-parameters
 * https://docs.langchain4j.dev/tutorials/rag
 * https://docs.langchain4j.dev/tutorials/tools
+* https://docs.langchain4j.dev/tutorials/tools/#tools-hallucination-strategy
 * https://glaforge.dev/posts/2025/02/27/pretty-print-markdown-on-the-console/
 
 ### Book
