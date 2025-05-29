@@ -1,5 +1,5 @@
 > [!NOTE]
-> Here is a exchange I made with Gemini to ensure to understand the communication flow between an app and the LLM.
+> Here is a exchange I made with Gemini/ChatGPT to ensure to understand the communication flow between an app and the LLM.
 
 # My question
 
@@ -13,7 +13,7 @@
 6) The llm build a response using the initial user prompt and the return of the functions.
 
 
-# Reply from a Gemini
+# Reply from Gemini
 
 🤖 *Your understanding of the working flow between an app, an LLM using RAG, and custom functions is largely correct and comprehensive.*
 
@@ -59,3 +59,47 @@ Here's a refined version of your flow, with some extra detail and considerations
 * **Cost/Latency:** Each round trip to the LLM and each function call incurs latency and potentially cost. Efficient design tries to minimize unnecessary calls.
 * **Prompt Engineering for RAG:** The quality of the RAG results heavily depends on how you chunk and embed your data, and how you formulate the retrieval query from the user input.
 * **Function Description Quality:** The LLM's ability to correctly identify and use your custom functions depends on the clarity and accuracy of the function descriptions you provide to it.
+
+# Rely from ChatGPT
+
+🤖  *Your understanding is mostly correct!*
+
+Here's a slightly refined version of the RAG + custom functions flow to ensure clarity and accuracy:
+
+**Typical Working Flow: App with LLM using RAG + Custom Functions**
+
+1. **User sends a request to the app.**
+
+    * This is the initial natural language input.
+
+2. **The app performs retrieval from the embedding store** *(RAG step)* **based on the user input.**
+
+    * This could involve converting the query into an embedding and performing vector similarity search to find relevant documents or context.
+
+3. **The app sends the enriched prompt to the LLM, along with the list of available functions.**
+
+    * The enriched prompt = user input + retrieved documents/context.
+    * The available functions are included using OpenAI’s function-calling API (or similar interface, depending on LLM provider).
+
+4. **The LLM decides if a function call is needed and responds with:**
+
+    * The name of the function to call.
+    * The parameters to pass.
+    * If no function is needed, it may directly generate the final answer.
+
+5. **The app executes the function call and collects the result.**
+
+    * This might be calling an internal API, a database, external API, or any logic-based function.
+
+6. **The app sends the function result back to the LLM.**
+
+    * The LLM uses the original prompt, retrieved context, and now also the function result(s) to generate a final response.
+
+7. *(Optional but common)* **The LLM generates the final answer, which the app returns to the user.**
+
+**Notes:**
+
+* This pattern supports **retrieval-augmented generation (RAG)** and **tool use** (function calling) together.
+* The LLM does not perform actual function execution — it only suggests what function to use and with what arguments.
+* Multiple function calls may occur in a single session depending on complexity.
+
