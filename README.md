@@ -46,6 +46,11 @@ $ mvn spring-boot:run
 ```bash
 $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://localhost:8080/ask
 ```
+
+## Communication flow between app and LLM
+
+💡 See [here](flow.md) for details.
+
 ## Potential security weaknesses identified
 
 ### Malicious input
