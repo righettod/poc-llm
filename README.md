@@ -51,7 +51,11 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 
 💡 See [here](flow.md) for details.
 
-## Potential security weaknesses identified
+## Tools (Function Calling) vs Model Context Protocol (MCP) Server
+
+💡 See [here](tools-vs-mcp.md) for details.
+
+## Potential security weaknesses identified on a application leveraging a LLM
 
 ### Malicious input
 
@@ -91,6 +95,8 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 
 ### Website
 
+#### Longchain4J
+
 * https://docs.langchain4j.dev/integrations/language-models/ollama
 * https://docs.langchain4j.dev/integrations/language-models/ollama#parameters
 * https://docs.langchain4j.dev/category/tutorials
@@ -98,6 +104,9 @@ $ curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://loca
 * https://docs.langchain4j.dev/tutorials/rag
 * https://docs.langchain4j.dev/tutorials/tools
 * https://docs.langchain4j.dev/tutorials/tools/#tools-hallucination-strategy
+* https://docs.langchain4j.dev/tutorials/mcp
+
+#### Misc
 * https://glaforge.dev/posts/2025/02/27/pretty-print-markdown-on-the-console/
 
 ### Book
