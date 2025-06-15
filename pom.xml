@@ -24,6 +24,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- BEGIN: Used to create the MCP SERVER part -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- END -->
+        <!-- BEGIN: Used to create the app leveraging the LLM -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-ollama</artifactId>
@@ -39,6 +47,12 @@
             <artifactId>langchain4j-easy-rag</artifactId>
             <version>1.0.1-beta6</version>
         </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-mcp</artifactId>
+            <version>1.0.1-beta6</version>
+        </dependency>
+        <!-- END -->
     </dependencies>
 
     <build>

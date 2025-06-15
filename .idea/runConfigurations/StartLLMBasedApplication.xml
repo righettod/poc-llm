@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="StartLabs" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="eu.righettod.poc.Application" />
+  <configuration default="false" name="StartLLMBasedApplication" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="eu.righettod.poc.app.Application" />
     <module name="llm-poc" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="eu.righettod.poc.*" />
+        <option name="PATTERN" value="eu.righettod.poc.mcp.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

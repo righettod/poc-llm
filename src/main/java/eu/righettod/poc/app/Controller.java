@@ -1,11 +1,14 @@
-package eu.righettod.poc;
+package eu.righettod.poc.app;
 
-import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.mcp.McpToolProvider;
+import dev.langchain4j.mcp.client.DefaultMcpClient;
+import dev.langchain4j.mcp.client.McpClient;
+import dev.langchain4j.mcp.client.transport.McpTransport;
+import dev.langchain4j.mcp.client.transport.http.HttpMcpTransport;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.request.ResponseFormat;
@@ -64,8 +67,25 @@ public class Controller {
     @Value("${ollama.trace.exchanges}")
     private boolean ollamaTraceExchange;
 
+    @Value("${mcp.server.transport.endpoint}")
+    private String mcpServerTransportEndpoint;
+
     @PostConstruct
     public void initializeModel() {
+        logger.info("[INIT] Prepare MCP server connectivity...");
+        McpTransport transport = new HttpMcpTransport.Builder()
+                .sseUrl(mcpServerTransportEndpoint)
+                .logRequests(ollamaTraceExchange)
+                .logResponses(ollamaTraceExchange)
+                .build();
+        McpClient mcpClient = new DefaultMcpClient.Builder()
+                .key("MyMCPClient")
+                .transport(transport)
+                .build();
+        McpToolProvider mcpServerToolProvider = McpToolProvider.builder()
+                .mcpClients(mcpClient)
+                .build();
+
         logger.info("[INIT] Index PDF files from folder 'documents'...");
         PathMatcher pdfFileMatcher = FileSystems.getDefault().getPathMatcher("glob:*.pdf");
         List<Document> documents = FileSystemDocumentLoader.loadDocuments(Paths.get("documents"), pdfFileMatcher);
@@ -92,6 +112,7 @@ public class Controller {
                 .chatMemory(chatMemory)
                 .contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore))
                 .tools(new CustomTools())
+                .toolProvider(mcpServerToolProvider)
                 .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()))
                 .build();
 
