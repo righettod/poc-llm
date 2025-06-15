@@ -95,7 +95,7 @@ PS> curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://lo
 
 ## References used
 
-### Website
+### Websites
 
 #### Langchain4J
 
@@ -116,7 +116,7 @@ PS> curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://lo
 
 * https://glaforge.dev/posts/2025/02/27/pretty-print-markdown-on-the-console/
 
-### Book
+### Books
 
 * [Artificial Intelligence for Dummies](https://www.amazon.fr/dp/1394270712).
 * [AI Engineering: Building Applications with Foundation Models](https://www.amazon.fr/dp/1098166302).
