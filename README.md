@@ -93,6 +93,92 @@ PS> curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://lo
 
 🐞 Depending on how chat session are isolated between users, it could be possible from the user A to hijack the chat session of the user B and then retrieve its chat history. 
 
+## Potential security weaknesses identified on a MCP server
+
+### Malicious input
+
+🐞 If a tool exposed by the MCP server do not check the passed parameter than the MCP server can be used, as a relay, to affect the system in charge of the processing of the exposed and targeted tools. 
+
+### Authentication issue
+
+🐞 Tools exposed by the MCP server can lack of authentication so any caller can discover use any tools exposed.
+
+### Authorization issue
+
+🐞 Tools exposed by the MCP server can have an authorization issue so a caller can be able to call a tools that is not intended to.
+
+## Identify on a exposed MCP server using web protocols
+
+🤔 List of potential path from a base URL like `https://domain.com`:
+
+```text
+/sse
+/mcp/transport
+```
+
+💡 Taken from the following sources:
+
+* https://docs.spring.io/spring-ai/reference/api/mcp/mcp-server-boot-starter-docs.html#_configuration_properties
+
+🤔 Identify the **capabilities/discovery** endpoint via `curl`:
+
+```bash
+$ curl -v --no-buffer http://localhost:8081/mcp/transport
+> GET /mcp/transport HTTP/1.1
+> Host: localhost:8081
+> User-Agent: Mozilla/5.0
+> Accept: */*
+>
+< HTTP/1.1 200
+< Cache-Control: no-cache
+< Content-Type: text/event-stream
+< Transfer-Encoding: chunked
+< Date: Sun, 15 Jun 2025 16:18:54 GMT
+<
+id:efddc0b9-67c7-4c4b-b37d-30b529c95a62
+event:endpoint
+data:/mcp/message?sessionId=efddc0b9-67c7-4c4b-b37d-30b529c95a62
+```
+
+🔎 Marker:
+* Content type of the response set to `text/event-stream`.
+* Presence of `event:endpoint` in the response body.
+
+🔬 Once found it can be leverage to access to other type of endpoints exposed by the MCP server:
+
+* **Tools** endpoints.
+* **Resources** endpoints.
+* **Prompts** endpoints.
+* **Notifications** endpoint.
+* **Authentication/Authorization** endpoints.
+
+💡 The tool [modelcontextprotocol/inspector](https://github.com/modelcontextprotocol/inspector) can be used to browse, in a visual way, the different elements exposed by the MCP server identified:
+
+![mcp inspector](images/inspector00.png)
+
+💡 It have also a [CLI mode](https://github.com/modelcontextprotocol/inspector?tab=readme-ov-file#cli-mode).
+
+🔎 Example of configuration file, generated with the visual mode, used by the cli mode:
+
+```json
+{
+    "mcpServers": {
+        "default-server": {
+            "type": "sse",
+            "url": "http://localhost:8081/mcp/transport",
+            "note": "For SSE connections, add this URL directly in your MCP Client"
+        }
+    }
+}
+```
+
+🧑‍💻 Command example:
+
+```bash
+npx @modelcontextprotocol/inspector --cli --config cfg.json --server default-server --method tools/list
+```
+
+
 ## References used
 
 ### Websites
