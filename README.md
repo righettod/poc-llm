@@ -107,7 +107,7 @@ PS> curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://lo
 
 🐞 Tools exposed by the MCP server can have an authorization issue so a caller can be able to call a tools that is not intended to.
 
-## Identify on a exposed MCP server using web protocols
+## Identify an exposed MCP server using web protocols
 
 🤔 List of potential path from a base URL like `https://domain.com`:
 
