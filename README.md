@@ -25,9 +25,9 @@
 * Ollama model [llama3.1:latest](https://ollama.com/library/llama3.1)
   * To have *small model* using only TEXT data.
 * [LangChain4j](https://docs.langchain4j.dev/)
-  * To get the more nearest possible approach of the LLM concepts in the implementation of the labs.
+  * To get the more nearest possible approach of the LLM concepts in the implementation of the labs that is a *application leveraging a LLM*.
 * [SpringAI](https://docs.spring.io/spring-ai/reference/)
-  * To implement a *Model Context Protocol (MCP) server*, for which, exposed tools will be consumed by the app via the MCP client provided by *langchain4j*.
+  * To implement a *Model Context Protocol (MCP) server*, for which, exposed tools will be consumed by the app (application leveraging a LLM) via the MCP client provided by *langchain4j*.
   * Used because *langchain4j* was not supporting the creation of a MCP server at the time when this POC was created.
 
 ## Run the labs
