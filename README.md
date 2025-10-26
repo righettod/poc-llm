@@ -50,6 +50,7 @@ mindmap
         Access to the internal identifier of a user prompt from the chat session the user prompt belongs to.
         Access to the internal identifier and the content of a user prompt from a chat session different than the chat session the user prompt belongs to.
     🤖 LLM
+        Access to internal information of the model like for example training data.
         Ask to generate malicious output that will be triggered/rendered by the app.
         Crash the system process running the LLM or the machine itself due to usage of all resources.
 ```

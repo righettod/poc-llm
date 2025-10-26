@@ -1,18 +1,16 @@
 Clear-Host
 $base = "http://localhost:8080"
-$sessionId = Invoke-RestMethod -Uri "$base/start" -Method Get
-$customHeaders = @{
-    "Content-Type" = "text/plain"
-    "X-Chat-Session-Id" = $sessionId
-}
-Write-Host "🧑‍💻 Chat session: " -NoNewline
-Write-Host "$sessionId" -ForegroundColor Green
+$sessionHeaderName = "X-Chat-Session-Id"
+$requestHeaders = @{ "Content-Type" = "text/plain" }
+$sessionId = "000000000000"
 while ($true)
 {
-    Write-Host -ForegroundColor Yellow "[User Message]:"
+    Write-Host -ForegroundColor Yellow "[$sessionId][User Message]:"
     $userMessage = Read-Host
-    Write-Host -ForegroundColor Cyan "[LLM  Response]: "
-    $response = Invoke-RestMethod -Uri "$base/ask" -Method Post -Headers $customHeaders -Body $userMessage
+    Write-Host -ForegroundColor Cyan "[$sessionId][LLM  Response]:"
+    $response = Invoke-RestMethod -Uri "$base/ask" -Method Post -Headers $requestHeaders -Body $userMessage -ResponseHeadersVariable responseHeaders
+    $requestHeaders[$sessionHeaderName] = $responseHeaders[$sessionHeaderName][0]
+    $sessionId = $requestHeaders[$sessionHeaderName]
     Write-Host $response
     Write-Host "--------------------"
 }
