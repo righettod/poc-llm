@@ -105,11 +105,14 @@ HTTP request:
 ```text
 This is a common issue when using Ollama + LangChain4j + format: "json" with models like Llama 3.1.
 
-Llama 3.1 (and most llama3 family models) are not natively fine-tuned for JSON mode. Unlike OpenAI’s GPT-4 Turbo or Gemini models, Ollama’s models don’t automatically enforce strict JSON syntax, so when you request format: "json", the model tries—but often fails—to comply.
+Llama 3.1 (and most llama3 family models) are not natively fine-tuned for JSON mode. 
+Unlike OpenAI’s GPT-4 Turbo or Gemini models, Ollama’s models don’t automatically enforce
+strict JSON syntax, so when you request format: "json", the model tries—but often fails—to comply.
 
 That’s why you see junk.
 
-It’s the model trying to start a JSON response ({) but it doesn’t know how to fill it — and Ollama truncates or filters invalid JSON output.
+It’s the model trying to start a JSON response ({) but it doesn’t know how to fill it
+and Ollama truncates or filters invalid JSON output.
 ```
 
 So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, it solved the problem and the model was correctly replying again 😊
