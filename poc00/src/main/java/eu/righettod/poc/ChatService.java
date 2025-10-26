@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatService {
 
     interface Assistant {
-        @SystemMessage("You act as a instructor and you must provide the elements or figures to prove your reply.")
+        @SystemMessage("You act as a instructor and you must provide the elements or figures to prove your reply. Remove any empty line from any response.")
         String chat(@UserMessage String message);
     }
 
@@ -88,8 +88,8 @@ public class ChatService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid session!");
         }
         logger.info("[CALL] Call for session {}", chatSessionId);
-        String llmResponseJson = chatAssistant.chat(userMessage);
-        return ResponseEntity.ok(llmResponseJson);
+        String llmResponse = chatAssistant.chat(userMessage);
+        return ResponseEntity.ok(llmResponse);
     }
 
     private String generateSessionId() {

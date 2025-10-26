@@ -44,12 +44,12 @@ Progress legends:
 ```mermaid
 mindmap
   root((Attack vectors))
-    Application
+    💻 Application
         Access or alter the system prompt.
         Execute or render malicious content returned by the LLM.
         Access to the internal identifier of a user prompt from the chat session the user prompt belongs to.
         Access to the internal identifier and the content of a user prompt from a chat session different than the chat session the user prompt belongs to.
-    LLM
+    🤖 LLM
         Ask to generate malicious output that will be triggered/rendered by the app.
         Crash the system process running the LLM or the machine itself due to usage of all resources.
 ```
