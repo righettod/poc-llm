@@ -11,12 +11,16 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Single controller exposing a service to chat with a LLM only (no tools or RAG).
@@ -29,9 +33,11 @@ public class ChatService {
         String chat(@UserMessage String message);
     }
 
-    private Assistant chatAssistant;
-
     private final Logger logger = LoggerFactory.getLogger(ChatService.class);
+
+    private final Map<String, Assistant> chatSessions = new ConcurrentHashMap<>();
+
+    private OllamaChatModel model;
 
     @Value("${ollama.baseurl}")
     private String ollamaBaseUrl;
@@ -55,68 +61,40 @@ public class ChatService {
     @PostConstruct
     public void initializeModel() {
         logger.info("[INIT] Configure the model execution...");
-        OllamaChatModel model = OllamaChatModel.builder().baseUrl(ollamaBaseUrl)
-                .modelName(ollamaModel)
-                .timeout(Duration.ofSeconds(ollamaResponseTimeout))
-                .temperature(ollamaModelCreativity)
-                .logRequests(ollamaTraceExchange)
-                .logResponses(ollamaTraceExchange)
-                .responseFormat(ResponseFormat.JSON)
+        this.model = OllamaChatModel.builder().baseUrl(this.ollamaBaseUrl)
+                .modelName(this.ollamaModel)
+                .timeout(Duration.ofSeconds(this.ollamaResponseTimeout))
+                .temperature(this.ollamaModelCreativity)
+                .logRequests(this.ollamaTraceExchange)
+                .logResponses(this.ollamaTraceExchange)
+                .responseFormat(ResponseFormat.TEXT)
                 .build();
-        logger.info("[INIT] Configure the chat proxy...");
-        ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(chatMemoryMaxEntries);
-        chatAssistant = AiServices.builder(Assistant.class).chatModel(model).chatMemory(chatMemory).build();
     }
 
-    @PostMapping(value = "/ask", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.TEXT_PLAIN_VALUE)
-    public String ask(@RequestBody String userMessage) {
-        return chatAssistant.chat(userMessage);
+    @GetMapping(value = "/start", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> startSession() {
+        String sessionId = generateSessionId();
+        logger.info("[INIT] Configure a new chat proxy for the session {}", sessionId);
+        ChatMemory chatMemory = MessageWindowChatMemory.builder().id(sessionId).maxMessages(this.chatMemoryMaxEntries).build();
+        Assistant chatAssistant = AiServices.builder(Assistant.class).chatModel(this.model).chatMemory(chatMemory).build();
+        this.chatSessions.put(sessionId, chatAssistant);
+        return ResponseEntity.ok(sessionId);
     }
 
-    /**
-     * Pretty-print Markdown on the console.<br>
-     * All credits goes to Guillaume Laforge (see the referenced link).
-     *
-     * @param md Markdown content.
-     * @return Content converted to console output.
-     * @see "https://glaforge.dev/posts/2025/02/27/pretty-print-markdown-on-the-console/"
-     */
-    private String markdownToConsole(String md) {
-        return md
-                // Bold
-                .replaceAll("\\*\\*(.*?)\\*\\*", "\u001B[1m$1\u001B[0m")
-                // Italic
-                .replaceAll("\\*(.*?)\\*", "\u001B[3m$1\u001B[0m")
-                // Underline
-                .replaceAll("__(.*?)__", "\u001B[4m$1\u001B[0m")
-                // Strikethrough
-                .replaceAll("~~(.*?)~~", "\u001B[9m$1\u001B[0m")
-                // Blockquote
-                .replaceAll("(> ?.*)",
-                        "\u001B[3m\u001B[34m\u001B[1m$1\u001B[22m\u001B[0m")
-                // Lists (bold magenta number and bullet)
-                .replaceAll("([\\d]+\\.|-|\\*) (.*)",
-                        "\u001B[35m\u001B[1m$1\u001B[22m\u001B[0m $2")
-                // Block code (black on gray)
-                .replaceAll("(?s)```(\\w+)?\\n(.*?)\\n```",
-                        "\u001B[3m\u001B[1m$1\u001B[22m\u001B[0m\n\u001B[57;107m$2\u001B[0m\n")
-                // Inline code (black on gray)
-                .replaceAll("`(.*?)`", "\u001B[57;107m$1\u001B[0m")
-                // Headers (cyan bold)
-                .replaceAll("(#{1,6}) (.*?)\n",
-                        "\u001B[36m\u001B[1m$1 $2\u001B[22m\u001B[0m\n")
-                // Headers with a single line of text followed by 2 or more equal signs
-                .replaceAll("(.*?\n={2,}\n)",
-                        "\u001B[36m\u001B[1m$1\u001B[22m\u001B[0m\n")
-                // Headers with a single line of text followed by 2 or more dashes
-                .replaceAll("(.*?\n-{2,}\n)",
-                        "\u001B[36m\u001B[1m$1\u001B[22m\u001B[0m\n")
-                // Images (blue underlined)
-                .replaceAll("!\\[(.*?)]\\((.*?)\\)",
-                        "\u001B[34m$1\u001B[0m (\u001B[34m\u001B[4m$2\u001B[0m)")
-                // Links (blue underlined)
-                .replaceAll("!?\\[(.*?)]\\((.*?)\\)",
-                        "\u001B[34m$1\u001B[0m (\u001B[34m\u001B[4m$2\u001B[0m)");
+    @PostMapping(value = "/ask", produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> ask(@RequestHeader("X-Chat-Session-Id") String chatSessionId, @RequestBody String userMessage) {
+        Assistant chatAssistant = chatSessions.get(chatSessionId);
+        if (chatAssistant == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid session!");
+        }
+        logger.info("[CALL] Call for session {}", chatSessionId);
+        String llmResponseJson = chatAssistant.chat(userMessage);
+        return ResponseEntity.ok(llmResponseJson);
+    }
+
+    private String generateSessionId() {
+        String sessionId = UUID.randomUUID().toString();
+        return Arrays.stream(sessionId.split("-")).toList().getLast();
     }
 
 }

@@ -47,12 +47,72 @@ mindmap
     Application
         Access or alter the system prompt.
         Execute or render malicious content returned by the LLM.
-        Access to the internal identifier of a user prompt from the chat session the user prompt belong to.
-        Access to the internal identifier and the content of a user prompt from a chat session different than the chat session the user prompt belong to.
+        Access to the internal identifier of a user prompt from the chat session the user prompt belongs to.
+        Access to the internal identifier and the content of a user prompt from a chat session different than the chat session the user prompt belongs to.
     LLM
         Ask to generate malicious output that will be triggered/rendered by the app.
         Crash the system process running the LLM or the machine itself due to usage of all resources.
 ```
+
+## Elements discovered during my study
+
+### Junk returned by the model llama3.1 when using JSON format with LangChain4j
+
+I was using `.responseFormat(ResponseFormat.JSON)` and I noticed that the model was returning me junk.
+
+Example of call to the model through LangChain4j:
+
+```txt
+HTTP request:
+- method: POST
+- url: http://localhost:11434/api/chat
+- headers: [Content-Type: application/json]
+- body: {
+  "model" : "llama3.1:latest",
+  "messages" : [ {
+    "role" : "system",
+    "content" : "You act as a instructor and you must provide the elements or figures to prove your reply."
+  }, {
+    "role" : "user",
+    "content" : "compute the result of 1 + 2."
+  }, {
+    "role" : "assistant",
+    "content" : "{  }",
+    "tool_calls" : [ ]
+  }, {
+    "role" : "user",
+    "content" : "compute the result of 1 + 2."
+  }, {
+    "role" : "assistant",
+    "content" : "{  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n  \n\n\n\n\n\n ",
+    "tool_calls" : [ ]
+  }, {
+    "role" : "user",
+    "content" : "compute the result of 1 + 2."
+  } ],
+  "options" : {
+    "temperature" : 0.0,
+    "stop" : [ ]
+  },
+  "format" : "json",
+  "stream" : false,
+  "tools" : [ ]
+}
+```
+
+🤔 I restarted the ollama process, reloaded the model, checked my code without success. So, I asked to ChatGPT for insight about my problem and its reply was the following:
+
+```text
+This is a common issue when using Ollama + LangChain4j + format: "json" with models like Llama 3.1.
+
+Llama 3.1 (and most llama3 family models) are not natively fine-tuned for JSON mode. Unlike OpenAI’s GPT-4 Turbo or Gemini models, Ollama’s models don’t automatically enforce strict JSON syntax, so when you request format: "json", the model tries—but often fails—to comply.
+
+That’s why you see junk.
+
+It’s the model trying to start a JSON response ({) but it doesn’t know how to fill it — and Ollama truncates or filters invalid JSON output.
+```
+
+So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, it solved the problem and the model was correctly replying again 😊
 
 ## Common resources and references used
 

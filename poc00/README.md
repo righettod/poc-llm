@@ -20,11 +20,7 @@ PS> ollama run llama3.1:latest
 
 💻 Step 2 - Execute the run configuration **StartApp** from Intellij IDEA.
 
-💻 Now you can call the model via the following HTTP request in another shell window or use the script [client.ps1](client.ps1):
-
-```powershell
-PS> curl -H "Content-Type: text/plain" -d "What is the result of 1+1?" http://localhost:8080/ask
-```
+💻 Now you can use the script [client.ps1](client.ps1) to exchange with the model.
 
 ## Pending test of attack vectors
 
