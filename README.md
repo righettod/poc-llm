@@ -38,6 +38,7 @@ Progress legends:
 * 🧑‍🎓 POC03: An MCP server exposing several functions to a local LLM.
 * 🧑‍🎓 POC04: App using LLM with a local MCP server.
 * 🧑‍🎓 POC05: App that is an Agent using a local LLM.
+* 🧑‍🎓 POC06: How secure is, from a source code perspective, an app developed using "Vibe Coding".
 
 ## Threat model
 
