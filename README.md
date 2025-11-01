@@ -1,5 +1,7 @@
 # POC-LLM
 
+![Check POCs state](https://github.com/righettod/poc-llm/actions/workflows/check_state.yml/badge.svg?branch=main)
+
 > [!NOTE]
 > It is *start from scratch* from this [work](https://github.com/righettod/poc-llm/releases/tag/1.0.0).
 
