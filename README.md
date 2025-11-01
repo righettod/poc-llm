@@ -42,7 +42,7 @@ Progress legends:
 
 ## Threat model
 
-🐞 I try to centralize, into this mindmap, the attack vectors I identified directly via POCs or by reading referential/books:
+🐞 I try to centralize, into this mindmap, the attack vectors I identified directly via POCs or by reading referential/books or by asking help to models like GEMINI/ChatGPT:
 
 ```mermaid
 mindmap
@@ -59,6 +59,7 @@ mindmap
     📚 RAG via the files store
         Insert a file with malicious content for which the content will be returned to the app via the LLM on a specific user prompt causing the content to be retrieved via RAG.
         Insert a file with malicious content that exploit a vulnerability present into a library used to parse the file when the embedding store is filled by an app.
+        Sensitive information disclosure via RAG retrieval due to a file used to fill the embedding store and that was not expected to be because it contains sensitive or PII information.
 ```
 
 ## Elements discovered during my study
