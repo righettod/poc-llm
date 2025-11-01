@@ -7,5 +7,5 @@ do
     echo "==== $pom"
     cd "$poc_folder"
     pwd
-    mvn clean package
+    mvn -q clean package
 done
