@@ -7,7 +7,7 @@ App using a local LLM only.
 ## Technology stack
 
 * [langchain4j](https://github.com/langchain4j/langchain4j) for the integration with a local LLM and have access to low level exchange with the LLM.
-  * Every time it is possible I stick to the way proposed in [samples](https://github.com/langchain4j/langchain4j-examples/tree/main) in order to use the framework. 
+  * Every time it is possible I stick to the way proposed in [samples](https://github.com/langchain4j/langchain4j-examples/tree/main) in order to use the framework.
 * [springboot](https://spring.io/projects/spring-boot) for exposing simple services.
 
 ## Run the POC
@@ -25,7 +25,7 @@ PS> ollama run llama3.1:latest
 
 ## Pending test of attack vectors
 
-🤔 Find new ones for this context ????
+✅ None.
 
 ## Notes about attack vectors
 
@@ -134,9 +134,3 @@ Note: This is not an exhaustive list, but rather a small sample of the vast
 amount of data I was trained on.
 --------------------
 ```
-
-## References
-
-* <https://docs.langchain4j.dev/tutorials/chat-and-language-models>
-* <https://docs.langchain4j.dev/integrations/language-models/ollama>
-* <https://docs.langchain4j.dev/category/tutorials>

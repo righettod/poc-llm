@@ -1,0 +1,11 @@
+Clear-Host
+$base = "http://localhost:8080"
+$requestHeaders = @{ "Content-Type" = "text/plain" }
+while ($true) {
+    Write-Host -ForegroundColor Yellow "[User Message]:"
+    $userMessage = Read-Host
+    Write-Host -ForegroundColor Cyan "[LLM  Response]:"
+    $response = Invoke-RestMethod -Uri "$base/ask" -Method Post -Headers $requestHeaders -Body $userMessage -ResponseHeadersVariable responseHeaders
+    Write-Host $response
+    Write-Host "--------------------"
+}

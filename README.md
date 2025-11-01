@@ -30,8 +30,8 @@ Progress legends:
 
 🎯 I want to explore the following topologies:
 
-* 🧑‍💻 [POC00](poc00/): App using a local LLM only.
-* 🧑‍🎓 POC01: App using a local LLM with RAG.
+* ✅ [POC00](poc00/): App using a local LLM only.
+* 🧑‍💻 [POC01](poc01/): App using a local LLM with RAG.
 * 🧑‍🎓 POC02: App using a local LLM with functions calling.
 * 🧑‍🎓 POC03: An MCP server exposing several functions to a local LLM.
 * 🧑‍🎓 POC04: App using LLM with a local MCP server.
@@ -53,6 +53,9 @@ mindmap
         Access to internal information of the model like for example training data.
         Ask to generate malicious output that will be triggered/rendered by the app.
         Crash the system process running the LLM or the machine itself due to usage of all resources.
+    📚 RAG via the files store
+        Insert a file with malicious content for which the content will be returned to the app via the LLM on a specific user prompt causing the content to be retrieved via RAG.
+        Insert a file with malicious content that exploit a vulnerability present into a library used to parse the file when the embedding store is filled by an app.
 ```
 
 ## Elements discovered during my study
@@ -138,3 +141,10 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 
 * <https://owasp.org/www-project-top-10-for-large-language-model-applications/>
 * <https://genai.owasp.org/>
+
+### Other
+
+* <https://docs.langchain4j.dev/tutorials/chat-and-language-models>
+* <https://docs.langchain4j.dev/integrations/language-models/ollama>
+* <https://docs.langchain4j.dev/category/tutorials>
+* <https://docs.langchain4j.dev/tutorials/rag>
