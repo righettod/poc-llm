@@ -53,13 +53,14 @@ mindmap
         Access to the internal identifier of a user prompt from the chat session the user prompt belongs to.
         Access to the internal identifier and the content of a user prompt from a chat session different than the chat session the user prompt belongs to.
     🤖 LLM
-        Access to internal information of the model like for example training data.
+        Access to internal information of the LLM like for example training data.
         Ask to generate malicious output that will be triggered/rendered by the app.
         Crash the system process running the LLM or the machine itself due to usage of all resources.
     📚 RAG via the files store
         Insert a file with malicious content for which the content will be returned to the app via the LLM on a specific user prompt causing the content to be retrieved via RAG.
         Insert a file with malicious content that exploit a vulnerability present into a library used to parse the file when the embedding store is filled by an app.
         Sensitive information disclosure via RAG retrieval due to a file used to fill the embedding store and that was not expected to be because it contains sensitive or PII information.
+        Insert one or several files with false content to cause the LLM to return false information.
 ```
 
 ## Elements discovered during my study

@@ -42,6 +42,12 @@ TODO
 
 ![prt01](images/prt01.png)
 
+### 😈 Insert one or several files with false content to cause the LLM to return false information
+
+Document inserted into the documents store  with "fake information" and user prompt used to retrieve its content via the app + LLM:
+
+![prt02](images/prt02.png)
+
 ## List of attack vectors asked to ChatGPT
 
 > [!TIP]

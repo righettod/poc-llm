@@ -108,7 +108,7 @@ figures to prove my replies, and also to remove empty lines from every response.
 --------------------
 ```
 
-### 😈 Access to internal information of the model like for example training data
+### 😈 Access to internal information of the LLM like for example training data
 
 Prompt sequence:
 
