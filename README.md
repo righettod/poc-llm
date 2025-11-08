@@ -64,7 +64,7 @@ mindmap
         Insert a file with malicious content for which the content will be returned to the app via the LLM on a specific user prompt causing the content to be retrieved via RAG.
         Insert a file with malicious content that exploit a vulnerability present into a library used to parse the file when the embedding store is filled by an app.
         Sensitive information disclosure via RAG retrieval due to a file used to fill the embedding store and that was not expected to be because it contains sensitive or PII information.
-        Insert one or several files with false content to cause the LLM to return false information.
+        Insert one or several files with false content to cause the LLM to return false or inaccurate information.
         Legal or IP or licensing violations via inserted copyrighted content into the file store that will be returned to the app via the LLM through content retrieved via RAG.
 ```
 
