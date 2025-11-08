@@ -50,7 +50,7 @@ Document inserted into the documents store  with "fake information" and user pro
 
 ## List of attack vectors asked to ChatGPT
 
-> [!TIP]
+> [!WARNING]
 > I only keep ones in my mind map that I was thinking as relevant for the context of my study.
 
 My question:
