@@ -42,7 +42,11 @@ Progress legends:
 
 ## Threat model
 
-🐞 I try to centralize, into this mindmap, the attack vectors I identified directly via POCs or by reading referential/books or by asking help to models like GEMINI/ChatGPT:
+🐞 I try to centralize, into the mindmap below, the attack vectors I identified either:
+
+* Directly via POCs.
+* By reading referential/books.
+* By asking help to GEMINI (model **2.5 Flash**) or ChatGPT (model **ChatGPT**).
 
 ```mermaid
 mindmap
