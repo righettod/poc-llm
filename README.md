@@ -33,8 +33,8 @@ Progress legends:
 🎯 I want to explore the following topologies:
 
 * ✅ [POC00](poc00/): App using a local LLM only.
-* 🧑‍💻 [POC01](poc01/): App using a local LLM with RAG.
-* 🧑‍🎓 POC02: App using a local LLM with functions calling.
+* ✅ [POC01](poc01/): App using a local LLM with RAG.
+* 🧑‍💻 [POC02]'poc02/): App using a local LLM with functions calling.
 * 🧑‍🎓 POC03: An MCP server exposing several functions to a local LLM.
 * 🧑‍🎓 POC04: App using LLM with a local MCP server.
 * 🧑‍🎓 POC05: App that is an Agent using a local LLM.

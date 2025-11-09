@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -72,9 +73,17 @@ public class ChatService {
                 .responseFormat(ResponseFormat.TEXT)
                 .build();
         logger.info("[INIT] Load documents for RAG...");
+        Instant start = Instant.now();
         List<Document> documents = FileSystemDocumentLoader.loadDocuments(Paths.get("documents"), FileSystems.getDefault().getPathMatcher("glob:*.pdf"));
+        Instant finish = Instant.now();
+        Duration timeElapsed = Duration.between(start, finish);
+        System.out.printf("DEBUG - List of documents obtained in %s seconds.\n",timeElapsed.toSeconds());
         InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+        start = Instant.now();
         EmbeddingStoreIngestor.ingest(documents, embeddingStore);
+        finish = Instant.now();
+        timeElapsed = Duration.between(start, finish);
+        System.out.printf("DEBUG - List of documents loaded into InMemoryEmbeddingStore in %s seconds.\n",timeElapsed.toSeconds());
         logger.info("[INIT] Create the chat assistant...");
         //MessageWindowChatMemory to 2 => 1 for the system prompt + 1 for the user prompt.
         this.chatAssistant = AiServices.builder(Assistant.class).chatModel(model).chatMemory(MessageWindowChatMemory.withMaxMessages(2)).contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore)).build();

@@ -25,7 +25,7 @@ PS> ollama run llama3.1:latest
 
 ## Pending test of attack vectors
 
-TODO
+✅ None.
 
 ## Notes about attack vectors
 
