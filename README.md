@@ -34,7 +34,7 @@ Progress legends:
 
 * ✅ [POC00](poc00/): App using a local LLM only.
 * ✅ [POC01](poc01/): App using a local LLM with RAG.
-* 🧑‍💻 [POC02]'poc02/): App using a local LLM with functions calling.
+* 🧑‍💻 [POC02](poc02/): App using a local LLM with Tools (Function Calling).
 * 🧑‍🎓 POC03: An MCP server exposing several functions to a local LLM.
 * 🧑‍🎓 POC04: App using LLM with a local MCP server.
 * 🧑‍🎓 POC05: App that is an Agent using a local LLM.
@@ -66,6 +66,11 @@ mindmap
         Sensitive information disclosure via RAG retrieval due to a file used to fill the embedding store and that was not expected to be because it contains sensitive or PII information.
         Insert one or several files with false content to cause the LLM to return false or inaccurate information.
         Legal or IP or licensing violations via inserted copyrighted content into the file store that will be returned to the app via the LLM through content retrieved via RAG.
+    ⚒️ Tools
+        Use a specific user prompt to call a tool with a malicious input parameter that will cause a malicious action on the system with which the tool with interact with. Can be to perform a create/update/delete operation or to read an unexpected information.
+        Use a specific user prompt to call a tool with a malicious input parameter that will cause the tool to return a response that will contain a malicious content that will be returned to the app via the response of the LLM.
+        Use a specific user prompt to ask the LLM to list the tool that it can call and then discover and use such hidden tools.
+
 ```
 
 ## Elements discovered during my study
@@ -158,3 +163,4 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 * <https://docs.langchain4j.dev/integrations/language-models/ollama>
 * <https://docs.langchain4j.dev/category/tutorials>
 * <https://docs.langchain4j.dev/tutorials/rag>
+* <https://docs.langchain4j.dev/tutorials/tools>

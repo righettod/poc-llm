@@ -37,14 +37,13 @@ PS> ollama run llama3.1:latest
 
 ### 😈 Sensitive information disclosure via RAG retrieval due to a file used to fill the embedding store and that was not expected to be because it contains sensitive or PII information
 
-
 "Sensitive" document inserted into the documents store and user prompt used to retrieve its content via the app + LLM:
 
 ![prt01](images/prt01.png)
 
 ### 😈 Insert one or several files with false content to cause the LLM to return false information
 
-Document inserted into the documents store  with "fake information" and user prompt used to retrieve its content via the app + LLM:
+Document inserted into the documents store with "fake information" and user prompt used to retrieve its content via the app + LLM:
 
 ![prt02](images/prt02.png)
 
