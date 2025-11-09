@@ -25,11 +25,15 @@ PS> ollama run llama3.1:latest
 
 ## Pending test of attack vectors
 
-Explore abuses of this behavior when configured on a tool:
+* Explore abuses of this behavior when configured on a tool:
 
 `Returning immediately the result of a tool execution request`
 
 https://docs.langchain4j.dev/tutorials/tools#returning-immediately-the-result-of-a-tool-execution-request
+
+* Explore abuses possible when **error handling** is not well handled on a tool:
+
+https://docs.langchain4j.dev/tutorials/tools#error-handling
 
 ## Notes about attack vectors
 

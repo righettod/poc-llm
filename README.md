@@ -70,7 +70,6 @@ mindmap
         Use a specific user prompt to call a tool with a malicious input parameter that will cause a malicious action on the system with which the tool with interact with. Can be to perform a create/update/delete operation or to read an unexpected information.
         Use a specific user prompt to call a tool with a malicious input parameter that will cause the tool to return a response that will contain a malicious content that will be returned to the app via the response of the LLM.
         Use a specific user prompt to ask the LLM to list the tool that it can call and then discover and use such hidden tools.
-
 ```
 
 ## Elements discovered during my study
