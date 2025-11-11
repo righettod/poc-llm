@@ -163,3 +163,6 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 * <https://docs.langchain4j.dev/category/tutorials>
 * <https://docs.langchain4j.dev/tutorials/rag>
 * <https://docs.langchain4j.dev/tutorials/tools>
+* <https://blog.kulkan.com/assessing-the-attack-surface-of-remote-mcp-servers-92d630a0cab0>
+* <https://blog.christianposta.com/the-updated-mcp-oauth-spec-is-a-mess/>
+* <https://damienbod.com/2025/10/16/implement-a-secure-mcp-oauth-desktop-client-using-oauth-and-entra-id/>
