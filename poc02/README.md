@@ -25,9 +25,7 @@ PS> ollama run llama3.1:latest
 
 ## Pending test of attack vectors
 
-* Explore abuses possible when **error handling** is not well handled on a tool:
-
-https://docs.langchain4j.dev/tutorials/tools#error-handling
+Make a test for this case *use a specific user prompt that manipulate the LLM reasoning so it selects a higher-risk tool even though another safer tool would be appropriate.*
 
 ## Notes about attack vectors
 
@@ -62,6 +60,12 @@ Specific function defined and user prompt used:
 Configuration of the "LLM client" (**AI Services** entity in LangChain4j) defined for handling the different kind of errors and user prompt used:
 
 ![prt04](images/prt04.png)
+
+### 😈 Use a specific user prompt to assume an elevated role to induce the LLM to call a tool that the role of the current user is not allowed to call
+
+Specific function defined and user prompt used:
+
+![prt05](images/prt05.png)
 
 ## List of attack vectors asked to ChatGPT
 

@@ -72,6 +72,7 @@ mindmap
         Use a specific user prompt to call a tool with a malicious input parameter that will cause the tool to return a response that will contain a malicious content that will be returned to the app via the response of the LLM.
         Use a specific user prompt to ask the LLM to list the tool that it can call and then discover and use such hidden tools.
         Use a specific user prompt to assume an elevated role to induce the LLM to call a tool that the role of the current user is not allowed to call.
+        Use a specific user prompt that manipulate the LLM reasoning so it selects a higher-risk tool even though another safer tool would be appropriate.
         Specific: When a tool, defined in the app, is configured to return its result directly and not send it back to the LLM then the tool can be used to access unexpected data or perform unexpected action in an easier way.
         Specific: Technical information disclosure due to an issue in the implementation of the handling of non existing tools, bad argument passed to a tool or any error occurring during the execution of a tool.
 ```

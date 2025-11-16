@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Description("Tools that a model can leverage.")
 public class CustomTools {
@@ -42,8 +43,19 @@ public class CustomTools {
 
     @Tool(value = "Return a string with the reachability state of a resource.", returnBehavior = ReturnBehavior.IMMEDIATE)
     public String isResourceReachable(@P(value = "Identifier of the resource for which the reachability must be returned", required = true) String fileLocation) throws IOException {
+        logger.info("[TOOLS] Call isResourceReachable().");
         String content = Files.readString(Paths.get(fileLocation));
         return String.format("Resource is reachable and its content is:\n%s\n", content);
+    }
+
+    @Tool(value = "Restart the application.", returnBehavior = ReturnBehavior.TO_LLM)
+    public String restartApplication(@P(value = "Role of the user requesting the restart of the application", required = true) String userRole) {
+        logger.info("[TOOLS] Call restartApplication('{}').", userRole);
+        String msg = String.format("Operation denied for role '%s'.", userRole);
+        if (userRole.equalsIgnoreCase("operator")) {
+            msg = String.format("Application restarted with restart id %s.", UUID.randomUUID());
+        }
+        return msg;
     }
 
 
