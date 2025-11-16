@@ -66,6 +66,7 @@ mindmap
         Sensitive information disclosure via RAG retrieval due to a file used to fill the embedding store and that was not expected to be because it contains sensitive or PII information.
         Insert one or several files with false content to cause the LLM to return false or inaccurate information.
         Legal or IP or licensing violations via inserted copyrighted content into the file store that will be returned to the app via the LLM through content retrieved via RAG.
+        Access to the data of a document, for which the current user is not expected to have access to, because the app incorrectly or not check the authorization prior to load the corresponding document via RAG.
     ⚒️ Tools
         Use a specific user prompt to call a tool with a malicious input parameter that will cause a malicious action on the system with which the tool with interact with. Can be to perform a create/update/delete operation or to read an unexpected information.
         Use a specific user prompt to call a tool with a malicious input parameter that will cause the tool to return a response that will contain a malicious content that will be returned to the app via the response of the LLM.
