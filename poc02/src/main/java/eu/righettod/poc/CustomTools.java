@@ -41,19 +41,10 @@ public class CustomTools {
     }
 
     @Tool(value = "Return a string with the reachability state of a resource.", returnBehavior = ReturnBehavior.IMMEDIATE)
-    public String isResourceReachable(@P(value = "Identifier of the resource for which the reachability must be returned", required = true) String fileLocation) {
+    public String isResourceReachable(@P(value = "Identifier of the resource for which the reachability must be returned", required = true) String fileLocation) throws IOException {
         Path location = Paths.get(fileLocation);
-        String state = "Resource is not reachable";
-        if (Files.exists(location)) {
-            String content = "";
-            try {
-                content = Files.readString(location);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            state = String.format("Resource is reachable and its content is:\n%s\n", content);
-        }
-        return state;
+        String content = Files.readString(location);
+        return String.format("Resource is reachable and its content is:\n%s\n", content);
     }
 
 

@@ -83,7 +83,7 @@ public class ChatService {
                 )
                 .toolExecutionErrorHandler(
                         (error, errorContext) -> {
-                            String errorMsg = String.format("Error: %s", error.getMessage());
+                            String errorMsg = String.format("Error: %s", error);
                             String msg = String.format("Something is wrong with tool execution.\n%s\n", errorMsg);
                             return ToolErrorHandlerResult.text(msg);
                         }
