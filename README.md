@@ -71,6 +71,8 @@ mindmap
         Use a specific user prompt to call a tool with a malicious input parameter that will cause a malicious action on the system with which the tool with interact with. Can be to perform a create/update/delete operation or to read an unexpected information.
         Use a specific user prompt to call a tool with a malicious input parameter that will cause the tool to return a response that will contain a malicious content that will be returned to the app via the response of the LLM.
         Use a specific user prompt to ask the LLM to list the tool that it can call and then discover and use such hidden tools.
+        Specific: When a tool, defined in the app, is configured to return its result directly and not send it back to the LLM then the tool can be used to access unexpected data or perform unexpected action in an easier way.
+        Specific: Technical information disclosure due to an issue in the implementation of the handling of non existing tools, bad argument passed to a tool or any error occuring during the execution of a tool.
 ```
 
 ## Elements discovered during my study
@@ -159,6 +161,7 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 
 ### Other
 
+* <https://docs.langchain4j.dev/tutorials/tools/#returning-immediately-the-result-of-a-tool-execution-request>
 * <https://docs.langchain4j.dev/tutorials/chat-and-language-models>
 * <https://docs.langchain4j.dev/integrations/language-models/ollama>
 * <https://docs.langchain4j.dev/category/tutorials>

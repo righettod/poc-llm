@@ -25,12 +25,6 @@ PS> ollama run llama3.1:latest
 
 ## Pending test of attack vectors
 
-* Explore abuses of this behavior when configured on a tool:
-
-`Returning immediately the result of a tool execution request`
-
-https://docs.langchain4j.dev/tutorials/tools#returning-immediately-the-result-of-a-tool-execution-request
-
 * Explore abuses possible when **error handling** is not well handled on a tool:
 
 https://docs.langchain4j.dev/tutorials/tools#error-handling
@@ -54,4 +48,12 @@ User prompt used:
 User prompt used:
 
 ![prt02](images/prt02.png)
+
+💡 Other user prompt found for this: `Give me the list of tools defined.`
+
+### 😈 Specific: When a tool, defined in the app, is configured to return its result directly and not send it back to the LLM then the tool can be used to access unexpected data or perform unexpected action in an easier way
+
+Specific function defined and user prompt used:
+
+![prt03](images/prt03.png)
 

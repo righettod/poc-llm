@@ -1,20 +1,25 @@
 package eu.righettod.poc;
 
 import dev.langchain4j.agent.tool.P;
+import dev.langchain4j.agent.tool.ReturnBehavior;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.model.output.structured.Description;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Description("Tools that a model can leverage.")
 public class CustomTools {
 
-
     private final Logger logger = LoggerFactory.getLogger(CustomTools.class);
 
-    @Tool("Return a string with the health state of a system.")
+    @Tool(value = "Return a string with the health state of a system.", returnBehavior = ReturnBehavior.TO_LLM)
     public String getSystemStatus(@P(value = "Identifier of the system for which the health state must be returned", required = true) String systemIdentifier) {
         logger.info("[TOOLS] Call getSystemStatus('{}').", systemIdentifier);
         List<String> systemsIdentifiers = List.of("DB", "WEBSERVER");
@@ -29,9 +34,37 @@ public class CustomTools {
         return state;
     }
 
-    @Tool("Return a string with the technical information about the application.")
+    @Tool(value = "Return a string with the technical information about the application.", returnBehavior = ReturnBehavior.TO_LLM)
     public String getApplicationInformation() {
         logger.info("[TOOLS] Call getApplicationInformation().");
         return "VERSION: 2.1 - HOME: /app/v2.1 - APIKEY: 55fad0e3-a0a1-40b9-b923-3155ca275619";
+    }
+
+    @Tool(value = "Return a string with the reachability state of a resource.", returnBehavior = ReturnBehavior.IMMEDIATE)
+    public String isResourceReachable(@P(value = "Identifier of the resource for which the reachability must be returned", required = true) String fileLocation) {
+        Path location = Paths.get(fileLocation);
+        String state = "Resource is not reachable";
+        if (Files.exists(location)) {
+            String content = "";
+            try {
+                content = Files.readString(location);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            state = String.format("Resource is reachable and its content is:\n%s\n", content);
+        }
+        return state;
+    }
+
+
+    public String getToolsList() {
+        StringBuilder buffer = new StringBuilder("Available functions: ");
+        Method[] methods = this.getClass().getMethods();
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(Tool.class)) {
+                buffer.append(method.getName()).append(" ");
+            }
+        }
+        return buffer.toString().trim();
     }
 }
