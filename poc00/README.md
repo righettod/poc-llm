@@ -9,10 +9,10 @@ sequenceDiagram
     actor U as User
     participant A as Application
     participant L as LLM
-    A->>A: Define the system prompt and<br/>configure the chat client<br/>and the conversation history
+    A->>A: Define the system prompt and<br/>configure the chat client<br/>with a conversation history memory
     U->>A: Send a request
     A->>+A: Create a user prompt from the content of the request
-    A->>+L: Send the user prompt throug the chat client
+    A->>+L: Send the user prompt through the chat client
     L->>+A: Receive and handle<br/>the LLM response
     A->>U: Return a formatted response
 ```
