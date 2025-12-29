@@ -140,6 +140,10 @@ and Ollama truncates or filters invalid JSON output.
 
 So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, it solved the problem and the model was correctly replying again 😊
 
+## Retex
+
+🤝 The folder [feedback](feedback/) contains pending work on some blog posts to share my feedback regarding my exploration.
+
 ## Common resources and references used
 
 ### Book
@@ -147,9 +151,11 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 * [Artificial Intelligence for Dummies](https://www.amazon.fr/dp/1394270712).
   * ✅ Read finished.
 * [AI Engineering: Building Applications with Foundation Models](https://www.amazon.fr/dp/1098166302).
-  * 🚧 Read almost finished.
+  * ✅ Read finished.
 * [The Agentic AI Bible](https://www.amazon.com/Agentic-Bible-Up-Date-Goal-Driven/dp/B0FL21R86Q).
-  * 📅 Ordering and reading planned.
+  * 📅 Ordering and reading planned after the *OWASP AI Testing Guide*.
+* [OWASP AI Testing Guide](https://owasp.org/www-project-ai-testing-guide/)
+  * 📅 Printed and reading planned for begining of 2026.
 
 ### Training
 
