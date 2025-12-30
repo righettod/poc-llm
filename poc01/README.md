@@ -177,3 +177,89 @@ Below I expand that into a focused, RAG-only threat list (each entry explains *w
 20. **Legal/IP/licensing violations through retrieval of copyrighted or restricted content**
     * *Why RAG-specific:* RAG may surface copyrighted material verbatim in responses, creating legal risk for the app.
     * *Short mitigation:* track content licensing on ingestion, prefer summarization, and block returns of high-risk copyrighted content.
+
+## Notes about handling authorization on embedding when using RAG
+
+🤔 My question to Google GEMINI (model **FAST**):
+
+```text
+How to handle authorization on embedding when using RAG with an app using LangChain4j?
+```
+
+🤖 Reply (OpenAI ChatGPT (model **ChatGPT**) indicated the same approach):
+
+Handling authorization in a Retrieval-Augmented Generation (RAG) system is critical because you don't want a user to "retrieve" documents they aren't permitted to see.
+
+In **LangChain4j**, the best way to handle this is through **Metadata Filtering**. Instead of just searching for the most relevant text, you restrict the search to only those documents that match the user's security attributes.
+
+### 1. The Strategy: Metadata Filtering
+
+When you ingest documents into your Vector Store (like Pinecone, Milvus, or Weaviate), you must attach "access control" metadata to each `TextSegment`.
+
+#### Step A: Ingestion with Security Tags
+
+When saving documents, add fields like `userId`, `groupId`, or `role`.
+
+```java
+TextSegment segment = TextSegment.from("Confidential Q3 Report...", 
+    Metadata.from("tenantId", "company_a", "accessLevel", "admin"));
+
+vectorStore.add(embeddingModel.embed(segment).content(), segment);
+```
+
+#### Step B: Retrieval with Filters
+
+When the user asks a question, you create a `Filter` that matches their credentials. LangChain4j provides a `Filter` DSL to make this easy.
+
+```java
+// Define the user's context
+String currentUserTenant = "company_a";
+
+// Create a filter: (tenantId == 'company_a' AND accessLevel == 'admin')
+Filter filter = metadataKey("tenantId").isEqualTo(currentUserTenant)
+        .and(metadataKey("accessLevel").isEqualTo("admin"));
+
+// Use the filter in the Retrieval query
+ContentRetriever retriever = EmbeddingStoreContentRetriever.builder()
+        .embeddingStore(embeddingStore)
+        .embeddingModel(embeddingModel)
+        .filter(filter) // This ensures the LLM never sees unauthorized data
+        .build();
+```
+
+### 2. Architecture Overview
+
+The security check happens at the **Vector Store** level, before the data ever reaches the LLM.
+
+### 3. Implementation Patterns
+
+#### Pattern A: User-Level Isolation
+
+If your app is a B2B SaaS where users should only see their own files, use a `userId` filter.
+
+* **Pros:** Very secure; simple logic.
+* **Cons:** Requires the `userId` to be indexed in every single document segment.
+
+#### Pattern B: Role-Based Access Control (RBAC)
+
+If you have hierarchies (e.g., Manager, Employee), store a list of allowed roles in the metadata.
+
+* **Logic:** `Filter.or(metadataKey("role").isEqualTo("public"), metadataKey("role").isEqualTo("manager"))`.
+
+#### Pattern C: Document-Level Permissions
+
+For complex apps (like Google Drive), you might store an `authorized_users` list as a metadata string or array (depending on which Vector Store you use).
+
+### 4. Key Considerations for LangChain4j
+
+1. **Vector Store Support:** Not all vector stores support complex filtering. Ensure your chosen store (e.g., PGVector, Qdrant) supports the `Filter` expressions in LangChain4j.
+2. **Performance:** Filtering by metadata is generally very fast, but if you have millions of documents and very complex nested filters, ensure your metadata fields are indexed in the underlying database.
+3. **The "Pre-Filtering" Advantage:** Always prefer **Pre-Filtering** (filtering before the similarity search) over Post-Filtering. LangChain4j’s `EmbeddingStoreContentRetriever` handles this natively for most integrations.
+
+### 4. Comparison of Approaches
+
+| Method | Where it Happens | Pros | Cons |
+| --- | --- | --- | --- |
+| **Metadata Filtering** | Vector Database | Highly secure, efficient. | Requires disciplined metadata tagging. |
+| **Prompt Engineering** | LLM Level | Easy to implement. | **Unsafe.** LLMs can be tricked via jailbreaking. |
+| **Post-Retrieval Filtering** | Java Application | Flexible logic. | Inefficient; might discard all results. |

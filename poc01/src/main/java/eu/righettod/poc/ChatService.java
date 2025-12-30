@@ -63,7 +63,7 @@ public class ChatService {
 
     @PostConstruct
     public void initializeModel() {
-        logger.info("[INIT] Configure the model execution...");
+        logger.info("[ChatService][INIT] Configure the model execution...");
         OllamaChatModel model = OllamaChatModel.builder().baseUrl(this.ollamaBaseUrl)
                 .modelName(this.ollamaModel)
                 .timeout(Duration.ofSeconds(this.ollamaResponseTimeout))
@@ -72,19 +72,19 @@ public class ChatService {
                 .logResponses(this.ollamaTraceExchange)
                 .responseFormat(ResponseFormat.TEXT)
                 .build();
-        logger.info("[INIT] Load documents for RAG...");
+        logger.info("[ChatService][INIT] Load documents for RAG...");
         Instant start = Instant.now();
         List<Document> documents = FileSystemDocumentLoader.loadDocuments(Paths.get("documents"), FileSystems.getDefault().getPathMatcher("glob:*.pdf"));
         Instant finish = Instant.now();
         Duration timeElapsed = Duration.between(start, finish);
-        System.out.printf("DEBUG - List of documents obtained in %s seconds.\n",timeElapsed.toSeconds());
+        System.out.printf("[ChatService] DEBUG - List of documents obtained in %s seconds.\n",timeElapsed.toSeconds());
         InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
         start = Instant.now();
         EmbeddingStoreIngestor.ingest(documents, embeddingStore);
         finish = Instant.now();
         timeElapsed = Duration.between(start, finish);
-        System.out.printf("DEBUG - List of documents loaded into InMemoryEmbeddingStore in %s seconds.\n",timeElapsed.toSeconds());
-        logger.info("[INIT] Create the chat assistant...");
+        System.out.printf("[ChatService] DEBUG - List of documents loaded into InMemoryEmbeddingStore in %s seconds.\n",timeElapsed.toSeconds());
+        logger.info("[ChatService][INIT] Create the chat assistant...");
         //MessageWindowChatMemory to 2 => 1 for the system prompt + 1 for the user prompt.
         this.chatAssistant = AiServices.builder(Assistant.class).chatModel(model).chatMemory(MessageWindowChatMemory.withMaxMessages(2)).contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore)).build();
     }
@@ -92,7 +92,7 @@ public class ChatService {
 
     @PostMapping(value = "/ask", produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> ask(@RequestBody String userMessage) {
-        logger.info("[CALL] Call");
+        logger.info("[ChatService][CALL] Call");
         String llmResponse = chatAssistant.chat("default", userMessage);
         return ResponseEntity.ok().body(llmResponse);
     }
