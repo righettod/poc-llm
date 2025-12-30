@@ -4,6 +4,30 @@
 
 App using a local LLM with RAG.
 
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant A as Application
+    participant S as DocumentStore    
+    participant V as InMemoryEmbeddingStore    
+    participant L as LLM
+    alt App startup time
+        A->>S: Ask for all the documents<br/>from the store
+        S->>A: Return the corresponding file<br/>for every document
+        A->>A: Create corresponding embeddings<br/>for every document
+        A->>V: Load them into the Vector DB
+        V->>A: Return ACK
+    end
+    A->>A: Define the system prompt and<br/>configure the chat client<br/>with a conversation history memory and<br>a content retriever bound to the InMemoryEmbeddingStore
+    U->>A: Send a request
+    A->>V: Find corresponding information <br/>from the content of the request
+    V->>A: Return matching tokens
+    A->>A: Create a user prompt<br/>from the content of the request and<br/>the additional data from the InMemoryEmbeddingStore
+    A->>L: Send the user prompt<br/>through the chat client
+    L->>A: Receive and handle<br/>the LLM response
+    A->>U: Return a formatted response
+```
+
 ## Technology stack
 
 * [langchain4j](https://github.com/langchain4j/langchain4j) for the integration with a local LLM and have access to low level exchange with the LLM.
