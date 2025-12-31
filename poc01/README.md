@@ -256,10 +256,18 @@ For complex apps (like Google Drive), you might store an `authorized_users` list
 2. **Performance:** Filtering by metadata is generally very fast, but if you have millions of documents and very complex nested filters, ensure your metadata fields are indexed in the underlying database.
 3. **The "Pre-Filtering" Advantage:** Always prefer **Pre-Filtering** (filtering before the similarity search) over Post-Filtering. LangChain4j’s `EmbeddingStoreContentRetriever` handles this natively for most integrations.
 
-### 4. Comparison of Approaches
+### 5. Comparison of Approaches
 
 | Method | Where it Happens | Pros | Cons |
 | --- | --- | --- | --- |
 | **Metadata Filtering** | Vector Database | Highly secure, efficient. | Requires disciplined metadata tagging. |
 | **Prompt Engineering** | LLM Level | Easy to implement. | **Unsafe.** LLMs can be tricked via jailbreaking. |
 | **Post-Retrieval Filtering** | Java Application | Flexible logic. | Inefficient; might discard all results. |
+
+### 6. POC with Metadata Filtering
+
+💡 Code of the chat service is [here](src/main/java/eu/righettod/poc/ChatServiceWithRAGMetadata.java) and one of the client is [here](clientWithRAGMetadata.ps1).
+
+![prt03](images/prt03.png)
+
+![prt04](images/prt04.png)
