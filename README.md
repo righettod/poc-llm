@@ -140,7 +140,7 @@ and Ollama truncates or filters invalid JSON output.
 
 So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, it solved the problem and the model was correctly replying again 😊
 
-## Retex
+## Feedback
 
 🤝 The folder [feedback](feedback/) contains pending work on some blog posts to share my feedback regarding my exploration.
 
