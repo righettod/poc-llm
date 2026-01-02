@@ -4,6 +4,31 @@
 
 App using a local LLM with Tools (Function Calling).
 
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant A as Application
+    participant T as Tools
+    participant L as LLM
+    alt App startup time
+        A ->>T: Ask for the definition of the available collection of Tools
+        T->>A: Return the definition
+    end
+    A->>A: Define the system prompt and<br/>configure the chat client<br/>with a conversation history memory and<br>bound to a set of tools<br/>that can be used by the LLM
+    U->>A: Send a request
+    A->>A: Add the definition of tools to the user prompt structure
+    A->>L: Send the user prompt<br/>through the chat client
+    loop Depending on the LLM behavior
+        L->>A: Request the tools X to be called with specific provided parameters
+        A->>T: Call the tool X with the parameters provided by the LLM
+        T->>A: Return the result
+        A->>L: Send the user prompt through the chat client<br/>enriched with the result<br/>of call to the tool X
+        L->>A: Receive and handle<br/>the LLM response
+    end
+    L->>A: Receive and handle<br/>the LLM response
+    A->>U: Return a formatted response
+```
+
 ## Technology stack
 
 * [langchain4j](https://github.com/langchain4j/langchain4j) for the integration with a local LLM and have access to low level exchange with the LLM.
@@ -25,7 +50,7 @@ PS> ollama run llama3.1:latest
 
 ## Pending test of attack vectors
 
-Make a test for this case *use a specific user prompt that manipulate the LLM reasoning so it selects a higher-risk tool even though another safer tool would be appropriate.*
+✅ None.
 
 ## Notes about attack vectors
 
@@ -229,4 +254,3 @@ Summary Mapping to Your Items:
 | Direct tool execution bypass      | #5                                               |
 | Info disclosure from errors       | #6                                               |
 | The rest                          | Extensions of the same category, not duplicates  |
-

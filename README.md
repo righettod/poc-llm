@@ -68,7 +68,7 @@ mindmap
         Legal or IP or licensing violations via inserted copyrighted content into the file store that will be returned to the app via the LLM through content retrieved via RAG.
         Access to the data of a document, for which the current user is not expected to have access to, because the app incorrectly or not check the authorization prior to load the corresponding document via RAG.
     ⚒️ Tools
-        Use a specific user prompt to call a tool with a malicious input parameter that will cause a malicious action on the system with which the tool with interact with. Can be to perform a create/update/delete operation or to read an unexpected information.
+        Use a specific user prompt to call a tool with a malicious input parameter that will cause a malicious action on the system with which the tool will interact with. Can be used to perform a create/update/delete operation or to read an unexpected information.
         Use a specific user prompt to call a tool with a malicious input parameter that will cause the tool to return a response that will contain a malicious content that will be returned to the app via the response of the LLM.
         Use a specific user prompt to ask the LLM to list the tool that it can call and then discover and use such hidden tools.
         Use a specific user prompt to assume an elevated role to induce the LLM to call a tool that the role of the current user is not allowed to call.
