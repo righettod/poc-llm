@@ -46,7 +46,7 @@ Progress legends:
 
 * Directly via POCs.
 * By reading referential/books.
-* By asking help to GEMINI (model **2.5 Flash**) or ChatGPT (model **ChatGPT**).
+* By asking help to GEMINI (models **2.5 Flash** / **Fast**) or ChatGPT (model **ChatGPT**).
 
 ```mermaid
 mindmap
