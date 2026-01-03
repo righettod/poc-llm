@@ -112,7 +112,7 @@ Example of user prompt:
 
 🤖 Reply from GEMINI (one from ChatGPT was quite the same):
 
-Yes, this is valid example of that specific security risk.
+Yes, this is a valid example of that specific security risk.
 
 In cybersecurity frameworks (such as the OWASP Top 10 for LLM Applications), this scenario falls under **Indirect Prompt Injection** or **Tool Use Manipulation**.
 
