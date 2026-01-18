@@ -153,7 +153,7 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 * [AI Engineering: Building Applications with Foundation Models](https://www.amazon.fr/dp/1098166302).
   * ✅ Read finished.
 * [OWASP AI Testing Guide](https://owasp.org/www-project-ai-testing-guide/)
-  * 📅 Printed and reading planned for begining of 2026.
+  * 🔬 Reading & studying in progress...
 * [The Agentic AI Bible](https://www.amazon.com/Agentic-Bible-Up-Date-Goal-Driven/dp/B0FL21R86Q).
   * 📅 Ordering and reading planned after the *OWASP AI Testing Guide*.  
 
