@@ -23,6 +23,6 @@ public class Application {
 
     @PostConstruct
     public void init() {
-        System.out.printf("[i] Protocol enabled: %s\n", protocol);
+        System.out.printf("INFO  - Protocol enabled: %s\n", protocol);
     }
 }
