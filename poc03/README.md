@@ -55,13 +55,15 @@ $ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-he
 
 {"tools":[{"name":"getCVERating","title":"getCVERating","description":"Get the CVSS rating a CVE.",
 "inputSchema":{"type":"object","properties":{"cveId":{"type":"string","description":"CVE identifier"}},
-"required":["cveId"]},"annotations":{"title":"","readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}]}
+"required":["cveId"]},"annotations":{"title":"","readOnlyHint":false,
+"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}]}
 
 ## Option 2: Using directly the URL of the MCP Server
 $ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method tools/list | jq -c
 
 {"tools":[{"name":"getCVERating","title":"getCVERating","description":"Get the CVSS rating a CVE.",
-"inputSchema":{"type":"object","properties":{"cveId":{"type":"string","description":"CVE identifier"}},"required":["cveId"]},"annotations":{"title":"","readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}]}
+"inputSchema":{"type":"object","properties":{"cveId":{"type":"string","description":"CVE identifier"}},"required":["cveId"]},"annotations":{"title":"","readOnlyHint":false,
+"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}]}
 
 # Call a tool
 $ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-headless-config.json --cli --method tools/call --tool-name getCVERating --tool-arg cveId=TEST | jq -c
