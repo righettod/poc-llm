@@ -46,11 +46,15 @@ event:endpoint
 data:/mcp/messages?sessionId=bba0bf26-a19c-46a2-85ec-3b0410d98c00
 ```
 
+💡 The file [modelcontextprotocol-inspector-headless-config.json](modelcontextprotocol-inspector-headless-config.json) was created with the following option of the GUI mode of `@modelcontextprotocol/inspector` (the server named `default-server` is automatically selected):
+
+![prt01](images/prt01.png)
+
 ℹ️ Once discovered, `@modelcontextprotocol/inspector` can be used in [CLI mode](https://github.com/modelcontextprotocol/inspector?tab=readme-ov-file#cli-mode) to interact with the MCP server (as `inspector` return json data then [JQ](https://jqlang.org/) is used to act on the content like compact/format/filter operations):
 
 ```bash
 # List available tools
-## Option 1: Using a configuration file
+## Option 1: Using a configuration file (can be used with all methods)
 $ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-headless-config.json --cli --method tools/list | jq -c
 
 {"tools":[{"name":"getCVERating","title":"getCVERating","description":"Get the CVSS rating a CVE.",
@@ -58,7 +62,7 @@ $ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-he
 "required":["cveId"]},"annotations":{"title":"","readOnlyHint":false,
 "destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}]}
 
-## Option 2: Using directly the URL of the MCP Server
+## Option 2: Using directly the URL of the MCP Server (can be used with all methods)
 $ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method tools/list | jq -c
 
 {"tools":[{"name":"getCVERating","title":"getCVERating","description":"Get the CVSS rating a CVE.",
@@ -71,11 +75,43 @@ $ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transpor
 $ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-headless-config.json --cli --method tools/call --tool-name getCVERating --tool-arg cveId=TEST | jq -c
 
 {"content":[{"type":"text","text":"10"}],"isError":false}
+
+# List available resources
+$ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method resources/list | jq -c
+
+{"resources":[]}
+
+# List all resources templates
+$ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method resources/templates/list | jq -c
+
+{"resourceTemplates":[{"name":"getCVEData","uriTemplate":"config://{cveId}",
+"description":"Provides content of a CVE.","mimeType":"text/plain"}]}
+
+# Read a resource from its URI
+$ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method resources/read --uri config://test | jq -c
+
+{"contents":[{"uri":"config://test","mimeType":"text/plain","text":"Data for CVE ID test"}]}
+
+# List available prompts
+$ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method prompts/list | jq -c
+
+{"prompts":[{"name":"getCVEPrompt","title":"","description":"Generate a prompt for a CVE",
+"arguments":[{"name":"cveId","description":"CVE identifier","required":true}]}]}
+
+# Get a prompt content from its prompt name and its prompts arguments
+$ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method prompts/get --prompt-name getCVEPrompt --prompt-args cveId=test | jq -c
+
+{"description":"Generate a prompt for a CVE","messages":[{"role":"assistant",
+"content":{"type":"text","text":"Provide me details for the specified CVE 'test'"}}]}
+
+# Perform a call to the MCP server specifying a metadata information
+# The key is "user" and the value is "dom"
+$ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method tools/call --tool-name getCVERating --tool-arg cveId=TEST --metadata user=dom | jq -c
+
+{"content":[{"type":"text","text":"Rating for CVE ID 'TEST' is 10 ({user=dom})"}],"isError":false}
 ```
 
-💡 The file [modelcontextprotocol-inspector-headless-config.json](modelcontextprotocol-inspector-headless-config.json) was created with the following option of the GUI mode of `@modelcontextprotocol/inspector` (the server named `default-server` is automatically selected):
-
-![prt01](images/prt01.png)
+💡 Use the parameter `--header "HEADER_NAME: HEADER_VALUE"` to pass a HTTP request header to the request made by `inspector`: Useful in case of CORS constraints or API key authentication in place.
 
 ## References & tools
 
@@ -85,9 +121,11 @@ $ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-he
 * <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-overview.html>
 * <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-server-boot-starter-docs.html>
 * <https://github.com/spring-projects/spring-ai-examples/tree/main/model-context-protocol>
+* <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-annotations-special-params.html>
 * <https://spring.io/projects/spring-ai>
 * <https://modelcontextprotocol.io/>
 * <https://modelcontextprotocol.io/docs/tutorials/security>
+* <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-security.html>
 
 ### Tools
 
