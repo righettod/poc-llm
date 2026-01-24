@@ -21,21 +21,69 @@ sequenceDiagram
 
 ## Run the POC
 
-TODO
+1. Start the MCP Server using the *Intellij IDEA* run configuration named **StartApp**: Server start on `http://localhost:8080`.
+
+1. Start [@modelcontextprotocol/inspector](https://modelcontextprotocol.io/docs/tools/inspector) via `npx @modelcontextprotocol/inspector` and connect to the MCP server like this:
+
+![prt00](images/prt00.png)
 
 ## Pending test of attack vectors
 
-TODO
+Check how to access resourced and prompt and see what behavior is available.
 
 ## Notes about attack vectors
 
-TODO
+### MCP Server discovery
 
-## References
+💡 Such command be used with `curl`:
+
+```bash
+# "--max-time 5" is used, as SSE is a stream, then it never end so max-time allow to
+# close the connection and then use the command in a discovery context when
+# the "/sse" contextpath is guessed
+$ curl --max-time 5 -N -H "Accept: text/event-stream" http://localhost:8080/sse
+event:endpoint
+data:/mcp/messages?sessionId=bba0bf26-a19c-46a2-85ec-3b0410d98c00
+```
+
+ℹ️ Once discovered, `@modelcontextprotocol/inspector` can be used in [CLI mode](https://github.com/modelcontextprotocol/inspector?tab=readme-ov-file#cli-mode) to interact with the MCP server (as `inspector` return json data then [JQ](https://jqlang.org/) is used to act on the content like compact/format/filter operations):
+
+```bash
+# List available tools
+## Option 1: Using a configuration file
+$ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-headless-config.json --cli --method tools/list | jq -c
+
+{"tools":[{"name":"getCVERating","title":"getCVERating","description":"Get the CVSS rating a CVE.","inputSchema":{"type":"object","properties":{"cveId":{"type":"string","description":"CVE identifier"}},"required":["cveId"]},"annotations":{"title":"","readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}]}
+
+## Option 2: Using directly the URL of the MCP Server
+$ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transport sse --method tools/list | jq -c
+
+{"tools":[{"name":"getCVERating","title":"getCVERating","description":"Get the CVSS rating a CVE.","inputSchema":{"type":"object","properties":{"cveId":{"type":"string","description":"CVE identifier"}},"required":["cveId"]},"annotations":{"title":"","readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}]}
+
+# Call a tool
+$ npx @modelcontextprotocol/inspector --config modelcontextprotocol-inspector-headless-config.json --cli --method tools/call --tool-name getCVERating --tool-arg cveId=TEST | jq -c
+
+{"content":[{"type":"text","text":"10"}],"isError":false}
+```
+
+💡 The file [modelcontextprotocol-inspector-headless-config.json](modelcontextprotocol-inspector-headless-config.json) was created with the following option of the GUI mode of `@modelcontextprotocol/inspector` (the server named `default-server` is automatically selected):
+
+![prt01](images/prt01.png)
+
+## References & tools
+
+### References
 
 * <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-annotations-server.html>
 * <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-overview.html>
 * <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-server-boot-starter-docs.html>
-* <https://modelcontextprotocol.io/>
 * <https://github.com/spring-projects/spring-ai-examples/tree/main/model-context-protocol>
 * <https://spring.io/projects/spring-ai>
+* <https://modelcontextprotocol.io/>
+* <https://modelcontextprotocol.io/docs/tutorials/security>
+
+### Tools
+
+* <https://modelcontextprotocol.io/docs/tools/inspector>
+* <https://github.com/modelcontextprotocol/inspector?tab=readme-ov-file#cli-mode>
+* <https://github.com/f/mcptools>
