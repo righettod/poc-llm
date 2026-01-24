@@ -114,6 +114,88 @@ $ npx @modelcontextprotocol/inspector --cli http://localhost:8080/sse --transpor
 
 💡 Use the parameter `--header "HEADER_NAME: HEADER_VALUE"` to pass a HTTP request header to the request made by `inspector`: Useful in case of CORS constraints or API key authentication in place.
 
+### MCP Server capabilities fuzzing
+
+🤔 `@modelcontextprotocol/inspector` is very useful but I found it slow for a fuzzing operation, like for example, to fuzz a parameter. Below is an example, using [httpie](https://httpie.io/), to send requests manually:
+
+```bash
+# Step 1: Initialize the session with the MCP server
+$ http POST http://localhost:8080/mcp Accept:"application/json, text/event-stream" Content-Type:application/json --raw '{"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"httpie"}},"jsonrpc":"2.0","id":0}'
+
+HTTP/1.1 200
+Connection: keep-alive
+Content-Type: application/json
+Date: Sat, 24 Jan 2026 17:42:49 GMT
+Keep-Alive: timeout=60
+Mcp-Session-Id: 206b1fcc-a9e3-47aa-9b73-25c2f96ce9c5
+Transfer-Encoding: chunked
+
+{
+    "id": 0,
+    "jsonrpc": "2.0",
+    "result": {
+        "capabilities": {
+            "completions": {},
+            "logging": {},
+            "prompts": {
+                "listChanged": true
+            },
+            "resources": {
+                "listChanged": true,
+                "subscribe": false
+            },
+            "tools": {
+                "listChanged": true
+            }
+        },
+        "instructions": "Sample MCP Server",
+        "protocolVersion": "2025-06-18",
+        "serverInfo": {
+            "name": "mcp-server",
+            "version": "1.0.0"
+        }
+    }
+}
+
+# Step 2: Call a JSON-RPC method using the session obtained
+$ http POST http://localhost:8080/mcp mcp-session-id:206b1fcc-a9e3-47aa-9b73-25c2f96ce9c5 mcp-protocol-version:2025-06-18 content-type:application/json accept:"application/json, text/event-stream" --raw '{"method":"tools/list","params":{},"jsonrpc":"2.0","id":2}'
+
+id:206b1fcc-a9e3-47aa-9b73-25c2f96ce9c5
+event:message
+data:{
+    "id": 2,
+    "jsonrpc": "2.0",
+    "result": {
+        "tools": [
+            {
+                "annotations": {
+                    "destructiveHint": true,
+                    "idempotentHint": false,
+                    "openWorldHint": true,
+                    "readOnlyHint": false,
+                    "title": ""
+                },
+                "description": "Get the CVSS rating a CVE.",
+                "inputSchema": {
+                    "properties": {
+                        "cveId": {
+                            "description": "CVE identifier",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "cveId"
+                    ],
+                    "type": "object"
+                },
+                "name": "getCVERating",
+                "title": "getCVERating"
+            }
+        ]
+    }
+}
+```
+
 ## References & tools
 
 ### References
