@@ -29,7 +29,8 @@ sequenceDiagram
 
 ## Pending test of attack vectors
 
-Check how to access resourced and prompt and see what behavior is available.
+* Check for fuzzing operation and issue with the request format accepted by the MCP server.
+* Check against existing list of attack vectors.
 
 ## Notes about attack vectors
 
