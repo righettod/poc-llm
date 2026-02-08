@@ -198,7 +198,7 @@ data:{
 
 ### Enhancement of the lisk of attack vectors
 
-🤔 I confronted my list against the [one](https://modelcontextprotocol-security.io/top10/server/) provided by the sirte `https://modelcontextprotocol-security.io/` with the help of GEMINI using this prompt:
+🤔 I confronted my list against the [one](https://modelcontextprotocol-security.io/top10/server/) provided by the site [modelcontextprotocol-security.io](https://modelcontextprotocol-security.io/) with the help of GEMINI using this prompt:
 
 ```text
 I have implemented a Model Context Protocol Server (server part only).
@@ -210,11 +210,9 @@ From risks mentioned on the following URL, which one I missed?
 https://modelcontextprotocol-security.io/top10/server/
 ```
 
-✅ The covered seems OK based on the reply from GEMINI:
+✅ The coverage seems OK based on the reply from GEMINI (I cross-checked with ChatGPT (model ChatGPT)):
 
 ![prt02](images/prt02.png)
-
-💡 I cross-checked with ChatGPT (model ChatGPT).
 
 ## References & tools
 
