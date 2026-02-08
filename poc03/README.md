@@ -196,6 +196,26 @@ data:{
 }
 ```
 
+### Enhancement of the lisk of attack vectors
+
+🤔 I confronted my list against the [one](https://modelcontextprotocol-security.io/top10/server/) provided by the sirte `https://modelcontextprotocol-security.io/` with the help of GEMINI using this prompt:
+
+```text
+I have implemented a Model Context Protocol Server (server part only).
+
+I have identified and handled the following risks:
+* [I INSERTED AS BULLETS POINTS THE LIST OF ATTACK VECTORS FOR "Tools (general)" and "Tools (MCP server)" SECTIONS FROM MY MINDMAP]
+
+From risks mentioned on the following URL, which one I missed?
+https://modelcontextprotocol-security.io/top10/server/
+```
+
+✅ The covered seems OK based on the reply from GEMINI:
+
+![prt02](images/prt02.png)
+
+💡 I cross-checked with ChatGPT (model ChatGPT).
+
 ## References & tools
 
 ### References
@@ -209,6 +229,8 @@ data:{
 * <https://modelcontextprotocol.io/>
 * <https://modelcontextprotocol.io/docs/tutorials/security>
 * <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-security.html>
+* <https://modelcontextprotocol-security.io/>
+* <https://modelcontextprotocol-security.io/top10/server/>
 
 ### Tools
 

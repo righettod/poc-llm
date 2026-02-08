@@ -76,8 +76,14 @@ mindmap
         Specific: When a tool, defined in the app, is configured to return its result directly and not send it back to the LLM then the tool can be used to access unexpected data or perform unexpected action in an easier way.
         Specific: Technical information disclosure due to an issue in the implementation of the handling of non existing tools, bad argument passed to a tool or any error occurring during the execution of a tool.    
     ToolsMCP["🖥️ Tools (MCP server)"]
-        Authentication issue affecting a tools/prompts/resources exposed.
-        Authorization issue affecting a tools/prompts/resources exposed.
+        Authentication issue affecting access to a tools/prompts/resources exposed.
+        Authorization issue affecting access to a tools/prompts/resources exposed like for example trusting the role specified into a received parameter instead of the role defined in the access token.
+        Authorization issue but internally: An MCP server requesting broader OAuth scopes than needed to perform a operation for a exposed tools.
+        The implementation of the MCP server use a external library and the code of the library was compromised via a supply chain attacks so malicious code was inserted.
+        The tools/prompts/resources are exposed using a insecure protocol like raw HTTP instead of HTTPS.
+        The implementation for the tools/prompts/resources do not have protection to prevent resource exhaustion that could lead to a DOS.
+        The implementation for the tools allow a caller to affect the metadata and descriptions returned by the MCP server for the affected tools.
+        The implementation for the prompts allow a caller to affect the content of the prompts returned by the MCP server for the affected prompts in order to make the prompts return SYSTEM prompts instruction insead of USER prompts instructions.
         Common issues affecting web API.
 ```
 
@@ -157,7 +163,7 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 * [AI Engineering: Building Applications with Foundation Models](https://www.amazon.fr/dp/1098166302).
   * ✅ Read finished.
 * [OWASP AI Testing Guide](https://owasp.org/www-project-ai-testing-guide/)
-  * 🔬 Reading & studying in progress...
+  * ✅ Read finished.
 * [The Agentic AI Bible](https://www.amazon.com/Agentic-Bible-Up-Date-Goal-Driven/dp/B0FL21R86Q).
   * 📅 Ordering and reading planned after the *OWASP AI Testing Guide*.  
 
@@ -170,6 +176,10 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 
 * <https://owasp.org/www-project-top-10-for-large-language-model-applications/>
 * <https://genai.owasp.org/>
+
+### Model Context Protocol Security
+
+* <https://modelcontextprotocol-security.io/top10/server/>
 
 ### Other
 
