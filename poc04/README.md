@@ -18,7 +18,7 @@
 Create a extended sample json result file that is the output of this tool: https://github.com/gitleaks/gitleaks
 ```
 
-🧑‍💻 Such data was not pushed as GH was refusing it even if fake data (that is normal).
+ℹ️ Such data was not pushed as GH was refusing it even if it was fake data (that is normal).
 
 ## Technology stack
 
