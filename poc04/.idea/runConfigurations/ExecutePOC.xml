@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ExecutePOC" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="eu.righettod.poc.EntryPoint" />
+    <module name="agent" />
+    <option name="PROGRAM_PARAMETERS" value="&quot;$Prompt:Enter the secret to analyze$&quot;" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="eu.righettod.poc.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

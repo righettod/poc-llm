@@ -1,0 +1,102 @@
+[
+    {
+        "Description": "AWS Access Key",
+        "Start": "AKIAIOSFODNN7EXAMPLE",
+        "End": "AKIAIOSFODNN7EXAMPLE",
+        "StartLine": 12,
+        "EndLine": 12,
+        "StartColumn": 18,
+        "EndColumn": 38,
+        "Match": "aws_access_key_id=AKIAIOSFODNN7EXAMPLE",
+        "Secret": "AKIAIOSFODNN7EXAMPLE",
+        "File": "config/credentials.aws",
+        "Symlink": "",
+        "Commit": "8f3e5b2a1c0d4e5f6g7h8i9j0k1l2m3n4o5p6q7r",
+        "Entropy": 3.8210,
+        "Author": "John Doe",
+        "Email": "j.doe@example.com",
+        "Date": "2023-10-15T14:30:05Z",
+        "Message": "Add initial AWS configuration for dev environment",
+        "Tags": [
+            "key",
+            "AWS"
+        ],
+        "RuleID": "aws-access-key",
+        "Fingerprint": "8f3e5b2a1c0d4e5f6g7h8i9j0k1l2m3n4o5p6q7r:config/credentials.aws:aws-access-key:12"
+    },
+    {
+        "Description": "Private Key",
+        "Start": "-----BEGIN PRIVATE KEY-----",
+        "End": "-----END PRIVATE KEY-----",
+        "StartLine": 5,
+        "EndLine": 32,
+        "StartColumn": 1,
+        "EndColumn": 25,
+        "Match": "-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDB...[truncated]...\\n-----END PRIVATE KEY-----",
+        "Secret": "-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDB...[truncated]...\\n-----END PRIVATE KEY-----",
+        "File": "certs/server.key",
+        "Symlink": "",
+        "Commit": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0",
+        "Entropy": 5.9214,
+        "Author": "Jane Smith",
+        "Email": "jsmith@company.org",
+        "Date": "2023-11-02T09:15:22Z",
+        "Message": "Setup SSL certificates for staging",
+        "Tags": [
+            "key",
+            "encryption"
+        ],
+        "RuleID": "private-key",
+        "Fingerprint": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0:certs/server.key:private-key:5"
+    },
+    {
+        "Description": "Generic API Key",
+        "Start": "api_key",
+        "End": "392f0391-e401-4712-b5e1-9562723c9321",
+        "StartLine": 45,
+        "EndLine": 45,
+        "StartColumn": 5,
+        "EndColumn": 47,
+        "Match": "\"api_key\": \"392f0391-e401-4712-b5e1-9562723c9321\"",
+        "Secret": "392f0391-e401-4712-b5e1-9562723c9321",
+        "File": "src/services/api_client.py",
+        "Symlink": "",
+        "Commit": "c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0",
+        "Entropy": 4.1032,
+        "Author": "Dev User",
+        "Email": "dev@internal.net",
+        "Date": "2023-12-20T11:00:00Z",
+        "Message": "Quick fix for the connection timeout",
+        "Tags": [
+            "key",
+            "API"
+        ],
+        "RuleID": "generic-api-key",
+        "Fingerprint": "c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0:src/services/api_client.py:generic-api-key:45"
+    },
+    {
+        "Description": "Slack Webhook",
+        "Start": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        "End": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        "StartLine": 8,
+        "EndLine": 8,
+        "StartColumn": 12,
+        "EndColumn": 84,
+        "Match": "SLACK_URL = \"https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX\"",
+        "Secret": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        "File": "scripts/notify.sh",
+        "Symlink": "",
+        "Commit": "f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0",
+        "Entropy": 3.4512,
+        "Author": "Ops Engineer",
+        "Email": "ops@infrastructure.com",
+        "Date": "2024-01-05T16:45:10Z",
+        "Message": "Update notification script for Slack integration",
+        "Tags": [
+            "webhook",
+            "slack"
+        ],
+        "RuleID": "slack-webhook",
+        "Fingerprint": "f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0:scripts/notify.sh:slack-webhook:8"
+    }
+]

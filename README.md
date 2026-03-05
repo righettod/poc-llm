@@ -35,10 +35,9 @@
 * ✅ [POC00](poc00/): App using a local LLM only.
 * ✅ [POC01](poc01/): App using a local LLM with RAG.
 * ✅ [POC02](poc02/): App using a local LLM with Tools (Function Calling).
-* 🧑‍💻 [POC03](poc03/): An MCP server exposing several functions to a local LLM.
-* 🧑‍🎓 POC04: App using LLM with a local MCP server.
-* 🧑‍🎓 POC05: App that is an Agent using a local LLM.
-* 🧑‍🎓 POC06: How secure is, from a source code perspective, an app developed using "Vibe Coding".
+* ✅ [POC03](poc03/): An MCP server exposing several functions to a local LLM.
+* 🧑‍💻 [POC04](poc04/): App that is an Agent using a local LLM.
+* 🧑‍🎓 POC05: How secure is, from a source code perspective, an app developed using "Vibe Coding".
 
 ## Threat model
 
@@ -159,18 +158,21 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 ### Book
 
 * [Artificial Intelligence for Dummies](https://www.amazon.fr/dp/1394270712).
-  * ✅ Read finished.
+  * ✅ Read finished: Very interesting.
 * [AI Engineering: Building Applications with Foundation Models](https://www.amazon.fr/dp/1098166302).
-  * ✅ Read finished.
+  * ✅ Read finished: Very interesting - A amazing book in terms of structure and content!
 * [OWASP AI Testing Guide](https://owasp.org/www-project-ai-testing-guide/)
-  * ✅ Read finished.
+  * ✅ Read finished: Very interesting.
 * [The Agentic AI Bible](https://www.amazon.com/Agentic-Bible-Up-Date-Goal-Driven/dp/B0FL21R86Q).
-  * 📅 Ordering and reading planned after the *OWASP AI Testing Guide*.  
+  * ⚠️ I rage quit the reading of the book and **made a return to Amazon!**
+  * The book is an entire continuous wall of text that seems generated with AI. It don't provide effective and useful content.
+* [Applied AI for Building Intelligent Systems](https://www.amazon.fr/dp/0135489687).  
+  * 📨 Ordered.
 
 ### Training
 
 * [SEC545: GenAI and LLM Application Security](https://www.sans.org/cyber-security-courses/genai-llm-application-security-5day).
-  * 📅 Planned for 2026.
+  * 📅 Planned.
 
 ### OWASP
 
@@ -179,7 +181,17 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 
 ### Model Context Protocol Security
 
+* <https://modelcontextprotocol-security.io/>
+* <https://modelcontextprotocol.io/>
 * <https://modelcontextprotocol-security.io/top10/server/>
+* <https://modelcontextprotocol.io/docs/tutorials/security>
+* <https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/mcp/mcp-security.html>
+
+### Tools
+
+* <https://modelcontextprotocol.io/docs/tools/inspector>
+* <https://github.com/modelcontextprotocol/inspector?tab=readme-ov-file#cli-mode>
+* <https://github.com/f/mcptools>
 
 ### Other
 

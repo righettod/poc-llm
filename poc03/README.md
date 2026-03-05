@@ -29,8 +29,7 @@ sequenceDiagram
 
 ## Pending test of attack vectors
 
-* Check for fuzzing operation and issue with the request format accepted by the MCP server.
-* Check against existing list of attack vectors.
+✅ None.
 
 ## Notes about attack vectors
 
