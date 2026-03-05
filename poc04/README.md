@@ -18,7 +18,7 @@
 Create a extended sample json result file that is the output of this tool: https://github.com/gitleaks/gitleaks
 ```
 
-📦 Data was stored in files `data/gitleaks-synthetic-data-from-[LLM-Provider-Name].json`.
+🧑‍💻 Such data was not pushed as GH was refusing it even if fake data (that is normal).
 
 ## Technology stack
 
