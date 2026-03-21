@@ -1,16 +1,26 @@
 # POC n°4
 
-## Goal
+## General goals
 
-🎯 The goal of this POC is the allow me to discover:
+🎯 The goals of this POC is the allow me to discover:
 
 * What is really an agent ?
 * How to implement one ?
 * What is the role of the LLM and which interaction are made?
 
-## Topology
+## Topologies
+
+### SemGrep sub poc
+
+🤔 Same idea than above but for [SemGrep](https://github.com/semgrep/semgrep). The idea was taken from this other [POC](https://github.com/righettod/toolbox-codescan/tree/main/misc/poc00).
+
+🧑‍💻 WIP...
 
 ### GitLeaks sub poc
+
+> 📦 Source code is into the folder [sub_poc_gitleaks](sub_poc_gitleaks/).
+
+#### Purpose
 
 🤔 I decided to implement a **agent** that will validate the secret identified by the tool [GitLeaks](https://github.com/gitleaks/gitleaks). The idea was taken from this other [POC](https://github.com/righettod/toolbox-codescan/tree/main/misc/poc01).
 
@@ -22,7 +32,7 @@ Create a extended sample json result file that is the output of this tool: https
 
 ℹ️ Such data was not pushed as GH was refusing it even if it was fake data (that is normal).
 
-🔬 Overview of the communication flows between agents:
+#### Overview of the communication flows between agents
 
 ```mermaid
 sequenceDiagram
@@ -53,18 +63,13 @@ sequenceDiagram
     S->>U: Return the final response    
 ```
 
-### SemGrep sub poc
-
-🤔 Same idea than above but for [SemGrep](https://github.com/semgrep/semgrep). The idea was taken from this other [POC](https://github.com/righettod/toolbox-codescan/tree/main/misc/poc00).
-
-🧑‍💻 WIP...
-
 ## Technology stack
 
 > 🤖 Model used is [qwen3-coder:480b-cloud](https://ollama.com/library/qwen3-coder).
 
-* [langchain4j](https://docs.langchain4j.dev/) via its `langchain4j-agentic` module.
-* Ollama via a [cloud version of a model](https://docs.ollama.com/cloud) to use a model intended to be used in a agent context: I used the "cloud" version of a model because my laptop was not able to handle a pure local version.
+* Ollama, via a [cloud version of a model](https://docs.ollama.com/cloud), to use a model intended to be used in a agent context: I used the "cloud" version of a model because my laptop was not able to handle a pure local version.
+* For the sub POC **Gitleaks**: Java with [langchain4j](https://docs.langchain4j.dev/) via its `langchain4j-agentic` module.
+* For the sub POC **SemGrep**: Python with [langgraph](https://www.langchain.com/langgraph) to discover the concept of Graph as well as advanced agent workflow patterns.
 
 🤖 Model relay execution prior to run the POC:
 
@@ -88,3 +93,4 @@ Connecting to 'qwen3-coder:480b' on 'ollama.com' ⚡
 ### References
 
 * <https://docs.langchain4j.dev/tutorials/agents>
+* <https://docs.langchain.com/oss/python/langgraph/overview>
