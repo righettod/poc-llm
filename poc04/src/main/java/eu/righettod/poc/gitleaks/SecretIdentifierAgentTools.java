@@ -1,4 +1,4 @@
-package eu.righettod.poc;
+package eu.righettod.poc.gitleaks;
 
 import com.github.pemistahl.lingua.api.Language;
 import com.github.pemistahl.lingua.api.LanguageDetector;
@@ -13,16 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
  * Collection of TOOLS to help the identification of the type of a secret.<br/>
  * Detection patterns are just for the POC so for sure they are buggy!
  */
-public class SecretIdentifierTools {
+public class SecretIdentifierAgentTools {
 
-    private final Logger logger = LoggerFactory.getLogger(SecretIdentifierTools.class);
+    private final Logger logger = LoggerFactory.getLogger(SecretIdentifierAgentTools.class);
 
     @Tool(value = "Identify if the given secret is a Amazon AWS key identifier.", returnBehavior = ReturnBehavior.TO_LLM)
     boolean isAWSKeyID(@P(value = "secret", required = true) String secret) {

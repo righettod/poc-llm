@@ -1,29 +1,29 @@
-package eu.righettod.poc;
+package eu.righettod.poc.gitleaks;
 
 import dev.langchain4j.agentic.AgenticServices;
 import dev.langchain4j.agentic.UntypedAgent;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
+import eu.righettod.poc.AgentEventTracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Map;
 
+import static eu.righettod.poc.Constants.*;
+
 /**
  * Entry point to run the POC.
  * @see "https://docs.langchain4j.dev/tutorials/agents#loop-workflow"
  */
-public class EntryPoint {
-    private static final String MODEL_NAME = "qwen3-coder:480b-cloud";
-    private static final double MODEL_TEMPERATURE = 0.0;
-    private static final String OLLAMA_BASE_URL = "http://localhost:11434/";
-    private static final int OLLAMA_RESPONSE_TIMEOUT = 240;
+public class GitLeaksFindingsClassifier {
+
     private static final int SUPERVISOR_AGENT_MAX_ITERATIONS = 5;
     private static final boolean DEBUG = true;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EntryPoint.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitLeaksFindingsClassifier.class);
 
     static void main(String[] args) throws Exception {
         //Create the model ran through Ollama
@@ -38,10 +38,10 @@ public class EntryPoint {
 
         //Create the secret identifier agent
         AgentEventTracer agentEventTracer = new AgentEventTracer();
-        SecretIdentifierTools secretIdentifierTools = new SecretIdentifierTools();
-        SecretIdentifier secretIdentifierAgent = AgenticServices.agentBuilder(SecretIdentifier.class)
+        SecretIdentifierAgentTools secretIdentifierAgentTools = new SecretIdentifierAgentTools();
+        SecretIdentifierAgent secretIdentifierAgent = AgenticServices.agentBuilder(SecretIdentifierAgent.class)
                 .chatModel(model)
-                .tools(secretIdentifierTools)
+                .tools(secretIdentifierAgentTools)
                 .outputKey("secretType")
                 .name("SECRET-IDENTIFIER")
                 .listener(agentEventTracer)
@@ -57,7 +57,7 @@ public class EntryPoint {
                 .exitCondition(agenticScope -> {
                     String secretType = (String) agenticScope.readState("secretType");
                     boolean mustExit = (!"unknown".equalsIgnoreCase(secretType));
-                    EntryPoint.LOGGER.info("[SUPERVISOR:exitCondition] Checking exit condition with secret type = '{}' => Exit ? {}.", secretType, mustExit);
+                    GitLeaksFindingsClassifier.LOGGER.info("[SUPERVISOR:exitCondition] Checking exit condition with secret type = '{}' => Exit ? {}.", secretType, mustExit);
                     return mustExit;
                 })
                 .maxIterations(SUPERVISOR_AGENT_MAX_ITERATIONS)

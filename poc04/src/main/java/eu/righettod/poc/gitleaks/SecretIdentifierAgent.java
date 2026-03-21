@@ -1,4 +1,4 @@
-package eu.righettod.poc;
+package eu.righettod.poc.gitleaks;
 
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.MemoryId;
@@ -12,7 +12,7 @@ import dev.langchain4j.service.V;
  * @see "https://docs.langchain4j.dev/tutorials/agents"
  * @see "https://github.com/langchain4j/langchain4j-examples/blob/main/agentic-tutorial/src/main/java/_3_loop_workflow/_3a_Loop_Agent_Example.java"
  */
-public interface SecretIdentifier {
+public interface SecretIdentifierAgent {
 
     @Agent("Analyse a secret to identify which type of secret it is")
     @SystemMessage("""

@@ -84,6 +84,10 @@ mindmap
         The implementation for the tools allow a caller to affect the metadata and descriptions returned by the MCP server for the affected tools.
         The implementation for the prompts allow a caller to affect the content of the prompts returned by the MCP server for the affected prompts in order to make the prompts return SYSTEM prompts instruction insead of USER prompts instructions.
         Common issues affecting web API.
+    ⚙️ Agent
+        Cause a DoS by falling in an infinite loop situation due the fact that the supervisor agent never received a reponse by a worker agent that fit the "exit" or "achieved" condition.
+        Issues related to Tools usage if Tools are involved.
+        Capability to act on the context instruction specified to the supervisor agent.
 ```
 
 ## Elements discovered during my study
@@ -167,7 +171,7 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
   * ⚠️ I rage quit the reading of the book and **made a return to Amazon!**
   * The book is an entire continuous wall of text that seems generated with AI. It don't provide effective and useful content.
 * [Applied AI for Building Intelligent Systems](https://www.amazon.fr/dp/0135489687).  
-  * 📨 Ordered.
+  * 🔬 Read in progress.
 
 ### Training
 

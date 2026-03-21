@@ -1,7 +1,8 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": ".",
+			"name": "POC on LLM"
 		}
 	],
 	"settings": {}
