@@ -12,6 +12,8 @@
 
 ### SemGrep sub poc
 
+> 📦 Source code is into the folder [sub_poc_semgrep](sub_poc_semgrep/).
+
 🤔 Same idea than above but for [SemGrep](https://github.com/semgrep/semgrep). The idea was taken from this other [POC](https://github.com/righettod/toolbox-codescan/tree/main/misc/poc00).
 
 🧑‍💻 WIP...

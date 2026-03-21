@@ -1,6 +1,12 @@
 {
     "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-python.isort",
+        "ms-python.vscode-python-envs",
         "bierner.markdown-mermaid",
         "davidanson.vscode-markdownlint",
+        "charliermarsh.ruff"
     ]
 }
