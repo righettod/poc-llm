@@ -21,7 +21,6 @@ import static eu.righettod.poc.Constants.*;
 public class GitLeaksFindingsClassifier {
 
     private static final int SUPERVISOR_AGENT_MAX_ITERATIONS = 5;
-    private static final boolean DEBUG = true;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitLeaksFindingsClassifier.class);
 

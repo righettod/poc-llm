@@ -8,4 +8,5 @@ public class Constants {
     public static final double MODEL_TEMPERATURE = 0.0;
     public static final String OLLAMA_BASE_URL = "http://localhost:11434/";
     public static final int OLLAMA_RESPONSE_TIMEOUT = 240;
+    public static final boolean DEBUG = true;
 }

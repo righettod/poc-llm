@@ -12,7 +12,7 @@
 
 ### GitLeaks sub poc
 
-🤔 I decided to implement a **agent** that will validate the secret identified by the tool [gitleaks](https://github.com/gitleaks/gitleaks). The idea was taken from this other [POC](https://github.com/righettod/toolbox-codescan/tree/main/misc/poc01).
+🤔 I decided to implement a **agent** that will validate the secret identified by the tool [GitLeaks](https://github.com/gitleaks/gitleaks). The idea was taken from this other [POC](https://github.com/righettod/toolbox-codescan/tree/main/misc/poc01).
 
 🤖 Input data was generated with **GEMINI** (model "Thinking"), **ChatGPT** (model "ChatGPT") and **Claude** (model "Sonnet 4.6 Extended") using the following user prompt:
 
@@ -55,7 +55,9 @@ sequenceDiagram
 
 ### SemGrep sub poc
 
-TODO
+🤔 Same idea than above but for [SemGrep](https://github.com/semgrep/semgrep). The idea was taken from this other [POC](https://github.com/righettod/toolbox-codescan/tree/main/misc/poc00).
+
+🧑‍💻 WIP...
 
 ## Technology stack
 
