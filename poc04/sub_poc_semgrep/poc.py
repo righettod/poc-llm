@@ -14,11 +14,13 @@ import httpx
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_ollama import ChatOllama
 from langgraph.graph import END, START, StateGraph
+from rich import print as pretty_print
 from typing_extensions import TypedDict
 
 # ---------------------------------------
 # Constants
 # ---------------------------------------
+DEFAULT_CLASSIFICATION_ROUNDS_COUNT = 3
 AGENT_MERMAID_IMAGE_FILE = "workflow-overview.png"
 SEMGREP_TEST_REPORT_FILE = "semgrep-data.json"
 VULNERABLE_CODEBASE_HOME = "vulnerable-codebase"
@@ -102,7 +104,7 @@ class WorkflowState(TypedDict):
     finding_description: str
     finding_start_line: int
     model_responses: list[str]
-    model_final_decision: list[str]
+    model_final_decisions: list[str]
     validation_round_count: int
 
 
@@ -124,6 +126,9 @@ def parse_semgrep_record(state: WorkflowState) -> dict[str, Any]:
     updated_state_properties["technology"] = technology
     updated_state_properties["finding_description"] = finding_description
     updated_state_properties["finding_start_line"] = int(finding_start_line)
+    # Ensure that the property "validation_round_count" is specified for the workflow call
+    if state.get("validation_round_count", -1) == -1:
+        updated_state_properties["validation_round_count"] = DEFAULT_CLASSIFICATION_ROUNDS_COUNT
     return updated_state_properties
 
 
@@ -146,10 +151,13 @@ def extract_vulnerable_source_code_with_llm(state: WorkflowState) -> dict[str, A
     else:
         single_line_comment_template = "#line number: %s"
     source_file_content = ""
+    # Read the source code and add the line numbers (starting to 1 to match lines numbering used by SemGrep), as a single line comment, at the end of the source code line
+    # to help the model the match the correct start line of the finding
     with open(file_base_path, mode="r", encoding=DEFAULT_ENCODING) as f:
         lines = f.read().splitlines()
         for line_number in range(len(lines)):
             source_file_content += f"{lines[line_number]} {single_line_comment_template % (line_number + 1)}\n"
+    # Call the model to extract the source code of the function related to the finding
     model = ChatOllama(model=MODEL_NAME, temperature=MODEL_TEMPERATURE, client_kwargs={"timeout": MODEL_RESPONSE_TIMEOUT})
     system_prompt = SystemMessage(content=SYSTEM_PROMPT_EXTRACTOR)
     user_prompt = HumanMessage(content=USER_PROMPT_EXTRACTOR_TEMPLATE % (state["finding_start_line"], state["technology"], source_file_content))
@@ -162,29 +170,32 @@ def extract_vulnerable_source_code_with_llm(state: WorkflowState) -> dict[str, A
 
 def classify_finding_with_llm(state: WorkflowState) -> dict[str, Any]:
     updated_state_properties = {}
+    # Call the model the classify the findings
     model = ChatOllama(model=MODEL_NAME, temperature=MODEL_TEMPERATURE, client_kwargs={"timeout": MODEL_RESPONSE_TIMEOUT})
     system_prompt = SystemMessage(content=SYSTEM_PROMPT_CLASSIFIER)
     user_prompt = HumanMessage(content=USER_PROMPT_CLASSIFIER_TEMPLATE % (state["cwe_description"], state["finding_description"], state["technology"], state["vulnerable_code_content"]))
     messages = [system_prompt, user_prompt]
     response = model.invoke(messages)
     model_response = response.content
+    # Add the response of the model to the collection of response from previous classification rounds
     model_responses = state.get("model_responses", [])
-    validation_round_count = int(state["validation_round_count"])
     model_responses.append(str(model_response))
-    updated_state_properties["validation_round_count"] = validation_round_count - 1
     updated_state_properties["model_responses"] = model_responses
+    # Add the decision, if the finding is really present or not so YES/NO, to an array to quickly identify if a decision (YES/NO) take the lead across all classification rounds
+    decisions = state.get("model_final_decisions", [])
+    data = json.loads(str(model_response))
+    model_reply = str(data["present"]).title()
+    decisions.append(model_reply)
+    updated_state_properties["model_final_decisions"] = decisions
+    # Decrease the classification round counter
+    validation_round_count = int(state["validation_round_count"])
+    updated_state_properties["validation_round_count"] = validation_round_count - 1
     return updated_state_properties
 
 
 def should_continue(state: WorkflowState) -> str:
     validation_round_count = int(state["validation_round_count"])
     if validation_round_count == 0:
-        model_final_decision = []
-        for model_response in state["model_responses"]:
-            data = json.loads(model_response)
-            model_reply = str(data["present"]).title()
-            model_final_decision.append(model_reply)
-        state["model_final_decision"] = model_final_decision
         return END
     else:
         return "classify_finding_with_llm"
@@ -222,10 +233,15 @@ if __name__ == "__main__":
     input = {"semgrep_record": semgrep_record, "validation_round_count": 3}
     results = agent.invoke(cast(WorkflowState, input))
     for k, v in results.items():
-        header = "=" * len(k)
+        header = "=" * (len(k) * 2)
         state_key_name = k.replace("_", " ").title()
         print(header)
         print(f"ℹ️ {state_key_name}")
         print(header)
-        print(v)
+        if k != "model_responses":
+            print(v)
+        else:
+            for round_position in range(len(v)):
+                print(f"==> Classification round n°{round_position}:")
+                pretty_print(v[round_position])
         print("")
