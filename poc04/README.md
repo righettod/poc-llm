@@ -71,7 +71,7 @@ sequenceDiagram
 * [SemGrep report](sub_poc_semgrep/semgrep-data-python.json) for the python code base.
 * [Related codebase](sub_poc_semgrep/vulnerable-codebase/).
 
-ℹ️ This [script](sub_poc_semgrep/poc_claude_code.py) is the version of POC using *Claude Code* instead of a local model.
+ℹ️ This [script](sub_poc_semgrep/poc_claude_code.py) is the version of the POC using *Claude Code* instead of a local model.
 
 #### Overview of the communication flow
 
