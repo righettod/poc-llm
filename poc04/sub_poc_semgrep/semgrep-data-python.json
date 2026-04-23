@@ -1,0 +1,397 @@
+{
+    "version": "1.138.0",
+    "results": [
+        {
+            "check_id": "tmp.semgrep-rules.python.flask.security.injection.raw-html-format",
+            "path": "vulns00.py",
+            "start": {
+                "line": 11,
+                "col": 15,
+                "offset": 203
+            },
+            "end": {
+                "line": 11,
+                "col": 61,
+                "offset": 249
+            },
+            "extra": {
+                "message": "Detected user input flowing into a manually constructed HTML string. You may be accidentally bypassing secure methods of rendering HTML by manually constructing HTML and this could create a cross-site scripting vulnerability, which could let attackers steal sensitive user data. To be sure this is safe, check that the HTML is rendered safely. Otherwise, use templates (`flask.render_template`) which will safely render HTML instead.",
+                "metadata": {
+                    "cwe": [
+                        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+                    ],
+                    "owasp": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
+                        "A03:2021 - Injection"
+                    ],
+                    "category": "security",
+                    "technology": [
+                        "python"
+                    ],
+                    "references": [
+                        "https://flask.palletsprojects.com/en/2.0.x/security/#cross-site-scripting-xss"
+                    ],
+                    "cwe2022-top25": true,
+                    "cwe2021-top25": true,
+                    "subcategory": [
+                        "vuln"
+                    ],
+                    "likelihood": "MEDIUM",
+                    "impact": "MEDIUM",
+                    "confidence": "MEDIUM"
+                },
+                "severity": "WARNING",
+                "fingerprint": "requires login",
+                "lines": "requires login",
+                "validation_state": "NO_VALIDATOR",
+                "engine_kind": "OSS"
+            }
+        },
+        {
+            "check_id": "tmp.semgrep-rules.python.flask.security.injection.raw-html-format",
+            "path": "vulns00.py",
+            "start": {
+                "line": 20,
+                "col": 15,
+                "offset": 497
+            },
+            "end": {
+                "line": 20,
+                "col": 61,
+                "offset": 543
+            },
+            "extra": {
+                "message": "Detected user input flowing into a manually constructed HTML string. You may be accidentally bypassing secure methods of rendering HTML by manually constructing HTML and this could create a cross-site scripting vulnerability, which could let attackers steal sensitive user data. To be sure this is safe, check that the HTML is rendered safely. Otherwise, use templates (`flask.render_template`) which will safely render HTML instead.",
+                "metadata": {
+                    "cwe": [
+                        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+                    ],
+                    "owasp": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
+                        "A03:2021 - Injection"
+                    ],
+                    "category": "security",
+                    "technology": [
+                        "python"
+                    ],
+                    "references": [
+                        "https://flask.palletsprojects.com/en/2.0.x/security/#cross-site-scripting-xss"
+                    ],
+                    "cwe2022-top25": true,
+                    "cwe2021-top25": true,
+                    "subcategory": [
+                        "vuln"
+                    ],
+                    "likelihood": "MEDIUM",
+                    "impact": "MEDIUM",
+                    "confidence": "MEDIUM"
+                },
+                "severity": "WARNING",
+                "fingerprint": "requires login",
+                "lines": "requires login",
+                "validation_state": "NO_VALIDATOR",
+                "engine_kind": "OSS"
+            }
+        },
+        {
+            "check_id": "tmp.semgrep-rules.python.flask.security.injection.raw-html-format",
+            "path": "vulns00.py",
+            "start": {
+                "line": 29,
+                "col": 15,
+                "offset": 765
+            },
+            "end": {
+                "line": 29,
+                "col": 61,
+                "offset": 811
+            },
+            "extra": {
+                "message": "Detected user input flowing into a manually constructed HTML string. You may be accidentally bypassing secure methods of rendering HTML by manually constructing HTML and this could create a cross-site scripting vulnerability, which could let attackers steal sensitive user data. To be sure this is safe, check that the HTML is rendered safely. Otherwise, use templates (`flask.render_template`) which will safely render HTML instead.",
+                "metadata": {
+                    "cwe": [
+                        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+                    ],
+                    "owasp": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
+                        "A03:2021 - Injection"
+                    ],
+                    "category": "security",
+                    "technology": [
+                        "python"
+                    ],
+                    "references": [
+                        "https://flask.palletsprojects.com/en/2.0.x/security/#cross-site-scripting-xss"
+                    ],
+                    "cwe2022-top25": true,
+                    "cwe2021-top25": true,
+                    "subcategory": [
+                        "vuln"
+                    ],
+                    "likelihood": "MEDIUM",
+                    "impact": "MEDIUM",
+                    "confidence": "MEDIUM"
+                },
+                "severity": "WARNING",
+                "fingerprint": "requires login",
+                "lines": "requires login",
+                "validation_state": "NO_VALIDATOR",
+                "engine_kind": "OSS"
+            }
+        },
+        {
+            "check_id": "tmp.semgrep-rules.python.flask.security.injection.raw-html-format",
+            "path": "vulns00.py",
+            "start": {
+                "line": 38,
+                "col": 19,
+                "offset": 1039
+            },
+            "end": {
+                "line": 38,
+                "col": 65,
+                "offset": 1085
+            },
+            "extra": {
+                "message": "Detected user input flowing into a manually constructed HTML string. You may be accidentally bypassing secure methods of rendering HTML by manually constructing HTML and this could create a cross-site scripting vulnerability, which could let attackers steal sensitive user data. To be sure this is safe, check that the HTML is rendered safely. Otherwise, use templates (`flask.render_template`) which will safely render HTML instead.",
+                "metadata": {
+                    "cwe": [
+                        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+                    ],
+                    "owasp": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
+                        "A03:2021 - Injection"
+                    ],
+                    "category": "security",
+                    "technology": [
+                        "python"
+                    ],
+                    "references": [
+                        "https://flask.palletsprojects.com/en/2.0.x/security/#cross-site-scripting-xss"
+                    ],
+                    "cwe2022-top25": true,
+                    "cwe2021-top25": true,
+                    "subcategory": [
+                        "vuln"
+                    ],
+                    "likelihood": "MEDIUM",
+                    "impact": "MEDIUM",
+                    "confidence": "MEDIUM"
+                },
+                "severity": "WARNING",
+                "fingerprint": "requires login",
+                "lines": "requires login",
+                "validation_state": "NO_VALIDATOR",
+                "engine_kind": "OSS"
+            }
+        },
+        {
+            "check_id": "tmp.semgrep-rules.python.flask.security.injection.raw-html-format",
+            "path": "vulns00.py",
+            "start": {
+                "line": 50,
+                "col": 15,
+                "offset": 1443
+            },
+            "end": {
+                "line": 50,
+                "col": 61,
+                "offset": 1489
+            },
+            "extra": {
+                "message": "Detected user input flowing into a manually constructed HTML string. You may be accidentally bypassing secure methods of rendering HTML by manually constructing HTML and this could create a cross-site scripting vulnerability, which could let attackers steal sensitive user data. To be sure this is safe, check that the HTML is rendered safely. Otherwise, use templates (`flask.render_template`) which will safely render HTML instead.",
+                "metadata": {
+                    "cwe": [
+                        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+                    ],
+                    "owasp": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
+                        "A03:2021 - Injection"
+                    ],
+                    "category": "security",
+                    "technology": [
+                        "python"
+                    ],
+                    "references": [
+                        "https://flask.palletsprojects.com/en/2.0.x/security/#cross-site-scripting-xss"
+                    ],
+                    "cwe2022-top25": true,
+                    "cwe2021-top25": true,
+                    "subcategory": [
+                        "vuln"
+                    ],
+                    "likelihood": "MEDIUM",
+                    "impact": "MEDIUM",
+                    "confidence": "MEDIUM"
+                },
+                "severity": "WARNING",
+                "fingerprint": "requires login",
+                "lines": "requires login",
+                "validation_state": "NO_VALIDATOR",
+                "engine_kind": "OSS"
+            }
+        },
+        {
+            "check_id": "tmp.semgrep-rules.python.flask.security.audit.avoid_app_run_with_bad_host",
+            "path": "vulns00.py",
+            "start": {
+                "line": 55,
+                "col": 5,
+                "offset": 1542
+            },
+            "end": {
+                "line": 55,
+                "col": 51,
+                "offset": 1588
+            },
+            "extra": {
+                "message": "Running flask app with host 0.0.0.0 could expose the server publicly.",
+                "metadata": {
+                    "cwe": [
+                        "CWE-668: Exposure of Resource to Wrong Sphere"
+                    ],
+                    "owasp": [
+                        "A01:2021 - Broken Access Control"
+                    ],
+                    "category": "security",
+                    "technology": [
+                        "python"
+                    ],
+                    "references": [
+                        "https://owasp.org/Top10/A01_2021-Broken_Access_Control"
+                    ],
+                    "subcategory": [
+                        "vuln"
+                    ],
+                    "likelihood": "HIGH",
+                    "impact": "MEDIUM",
+                    "confidence": "HIGH"
+                },
+                "severity": "WARNING",
+                "fingerprint": "requires login",
+                "lines": "requires login",
+                "validation_state": "NO_VALIDATOR",
+                "engine_kind": "OSS"
+            }
+        },
+        {
+            "check_id": "tmp.semgrep-rules.python.flask.security.audit.debug-enabled",
+            "path": "vulns00.py",
+            "start": {
+                "line": 55,
+                "col": 5,
+                "offset": 1542
+            },
+            "end": {
+                "line": 55,
+                "col": 51,
+                "offset": 1588
+            },
+            "extra": {
+                "message": "Detected Flask app with debug=True. Do not deploy to production with this flag enabled as it will leak sensitive information. Instead, consider using Flask configuration variables or setting 'debug' using system environment variables.",
+                "metadata": {
+                    "cwe": [
+                        "CWE-489: Active Debug Code"
+                    ],
+                    "owasp": "A06:2017 - Security Misconfiguration",
+                    "references": [
+                        "https://labs.detectify.com/2015/10/02/how-patreon-got-hacked-publicly-exposed-werkzeug-debugger/"
+                    ],
+                    "category": "security",
+                    "technology": [
+                        "python"
+                    ],
+                    "subcategory": [
+                        "vuln"
+                    ],
+                    "likelihood": "HIGH",
+                    "impact": "MEDIUM",
+                    "confidence": "HIGH"
+                },
+                "severity": "WARNING",
+                "fingerprint": "requires login",
+                "lines": "requires login",
+                "validation_state": "NO_VALIDATOR",
+                "engine_kind": "OSS"
+            }
+        }
+    ],
+    "errors": [],
+    "paths": {
+        "scanned": [
+            "vulns00.py"
+        ]
+    },
+    "time": {
+        "rules": [],
+        "rules_parse_time": 0.2754030227661133,
+        "profiling_times": {
+            "config_time": 13.410974025726318,
+            "core_time": 0.7733476161956787,
+            "ignores_time": 0.0005164146423339844,
+            "total_time": 14.185161352157593
+        },
+        "parsing_time": {
+            "total_time": 0.0,
+            "per_file_time": {
+                "mean": 0.0,
+                "std_dev": 0.0
+            },
+            "very_slow_stats": {
+                "time_ratio": 0.0,
+                "count_ratio": 0.0
+            },
+            "very_slow_files": []
+        },
+        "scanning_time": {
+            "total_time": 0.05958104133605957,
+            "per_file_time": {
+                "mean": 0.029790520668029785,
+                "std_dev": 0.0008350737761162463
+            },
+            "very_slow_stats": {
+                "time_ratio": 0.0,
+                "count_ratio": 0.0
+            },
+            "very_slow_files": []
+        },
+        "matching_time": {
+            "total_time": 0.0,
+            "per_file_and_rule_time": {
+                "mean": 0.0,
+                "std_dev": 0.0
+            },
+            "very_slow_stats": {
+                "time_ratio": 0.0,
+                "count_ratio": 0.0
+            },
+            "very_slow_rules_on_files": []
+        },
+        "tainting_time": {
+            "total_time": 0.0,
+            "per_def_and_rule_time": {
+                "mean": 0.0,
+                "std_dev": 0.0
+            },
+            "very_slow_stats": {
+                "time_ratio": 0.0,
+                "count_ratio": 0.0
+            },
+            "very_slow_rules_on_defs": []
+        },
+        "fixpoint_timeouts": [],
+        "prefiltering": {
+            "project_level_time": 0.0,
+            "file_level_time": 0.0,
+            "rules_with_project_prefilters_ratio": 0.0,
+            "rules_with_file_prefilters_ratio": 0.9326145552560647,
+            "rules_selected_ratio": 0.1105121293800539,
+            "rules_matched_ratio": 0.1105121293800539
+        },
+        "targets": [],
+        "total_bytes": 0,
+        "max_memory_bytes": 339774016
+    },
+    "engine_requested": "OSS",
+    "skipped_rules": []
+}

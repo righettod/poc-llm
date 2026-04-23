@@ -2,45 +2,30 @@
 This POC define a workflow to classify a finding found by SemGrep as a "False Positive" or "True Positive"
 using technical information about the class of vulnerability identified combined with a model able to read code.
 
+This version of the POC use Claude Code to perform the code evaluation.
+
 Dependencies:
-    pip install -U langgraph langchain-ollama httpx ipython rich
+    pip install -U langgraph claude-agent-sdk httpx ipython rich
 """
 
+import asyncio
 import json
 import sys
+from pathlib import Path
 from typing import Any, cast
 
 import httpx
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_ollama import ChatOllama
+from claude_agent_sdk import ClaudeAgentOptions, query
 from langgraph.graph import END, START, StateGraph
-from rich import print as pretty_print
 from typing_extensions import TypedDict
 
 # ---------------------------------------
 # Constants
 # ---------------------------------------
-DEFAULT_CLASSIFICATION_ROUNDS_COUNT = 3
-AGENT_MERMAID_IMAGE_FILE = "workflow-overview.png"
-SEMGREP_TEST_REPORT_FILE = "semgrep-data-java.json"
+AGENT_MERMAID_IMAGE_FILE = "workflow-overview-with-claude-code.png"
+SEMGREP_TEST_REPORT_FILE = "semgrep-data-python.json"
 VULNERABLE_CODEBASE_HOME = "vulnerable-codebase"
 DEFAULT_ENCODING = "utf-8"
-MODEL_NAME = "qwen3-coder:480b-cloud"
-MODEL_TEMPERATURE = 0.0
-MODEL_RESPONSE_TIMEOUT = 120
-SYSTEM_PROMPT_EXTRACTOR = """
-You are an assistant specialized in extracting a function from a source code.
-Given a global source code and a line number: You must extract the source code of the function in which the given line number is located.
-You must only output the source code of the function and no more information.
-"""
-USER_PROMPT_EXTRACTOR_TEMPLATE = """
-The line number is %s.
-The global source code is the following:
-
-```%s
-%s
-```
-"""
 SYSTEM_PROMPT_CLASSIFIER = """
 You are an assistant specializing in source code analysis focusing on security vulnerabilities. Your primary objective is to determine if a given security vulnerability is truly present and exploitable within a provided source code.
 
@@ -72,7 +57,7 @@ Given a source code and a description of a security vulnerability, output a repl
 
 **Output Format:**
 
-You must always reply with a valid JSON object with these fields:
+You must always reply with a valid JSON object with these fields and no more information:
 * `"trace"`: A step-by-step explanation of your decision-making process. If the vulnerability is blocked early, explain why and stop.
 * `"present"`: `"yes"` if the vulnerability is present, otherwise `"no"`.
 * `"exploit"`: A payload string that can trigger the vulnerability if present. If `"present": "no"`, this must always be an empty string.
@@ -81,11 +66,8 @@ You must always reply with a valid JSON object with these fields:
 USER_PROMPT_CLASSIFIER_TEMPLATE = """
 The Common Weakness Enumeration (CWE) description of the type of vulnerability identified is the following: `%s`.
 The vulnerability identified by the scanner is the following: `%s`.
-The vulnerable source code is the following:
-
-```%s
-%s
-```
+The vulnerability identified is located on line: `%s`.
+The vulnerable source code is located in the file: `%s`.
 """
 
 
@@ -99,13 +81,29 @@ class WorkflowState(TypedDict):
     cwe_id: int
     cwe_description: str
     source_file_path: str
-    vulnerable_code_content: str
     technology: str
     finding_description: str
     finding_start_line: int
-    model_responses: list[str]
-    model_final_decisions: list[str]
-    validation_round_count: int
+    model_response: dict
+    is_real_finding: str
+
+
+# ---------------------------------------
+# Utility functions
+# ---------------------------------------
+def ask_claude(user_prompt: str, call_options: ClaudeAgentOptions) -> str:
+    async def _run():
+        result = ""
+        async for message in query(prompt=user_prompt, options=call_options):
+            if hasattr(message, "result") and message.result:  # type: ignore
+                result = message.result  # type: ignore
+        result = result.replace("```json", "")
+        result = result.replace("```", "")
+        result = result.strip(" \r\n\t")
+        print(result)
+        return result
+
+    return asyncio.run(_run())
 
 
 # ---------------------------------------
@@ -126,9 +124,6 @@ def parse_semgrep_record(state: WorkflowState) -> dict[str, Any]:
     updated_state_properties["technology"] = technology
     updated_state_properties["finding_description"] = finding_description
     updated_state_properties["finding_start_line"] = int(finding_start_line)
-    # Ensure that the property "validation_round_count" is specified for the workflow call
-    if state.get("validation_round_count", -1) == -1:
-        updated_state_properties["validation_round_count"] = DEFAULT_CLASSIFICATION_ROUNDS_COUNT
     return updated_state_properties
 
 
@@ -142,63 +137,24 @@ def retrieve_cwe_information(state: WorkflowState) -> dict[str, Any]:
     return updated_state_properties
 
 
-def extract_vulnerable_source_code_with_llm(state: WorkflowState) -> dict[str, Any]:
-    updated_state_properties = {}
-    file_base_path = f"{VULNERABLE_CODEBASE_HOME}/{state['technology']}/{state['source_file_path']}"
-    technology = state["technology"]
-    if technology in ["java"]:
-        single_line_comment_template = "//line number: %s"
-    else:
-        single_line_comment_template = "#line number: %s"
-    source_file_content = ""
-    # Read the source code and add the line numbers (starting to 1 to match lines numbering used by SemGrep), as a single line comment, at the end of the source code line
-    # to help the model the match the correct start line of the finding
-    with open(file_base_path, mode="r", encoding=DEFAULT_ENCODING) as f:
-        lines = f.read().splitlines()
-        for line_number in range(len(lines)):
-            source_file_content += f"{lines[line_number]} {single_line_comment_template % (line_number + 1)}\n"
-    # Call the model to extract the source code of the function related to the finding
-    model = ChatOllama(model=MODEL_NAME, temperature=MODEL_TEMPERATURE, client_kwargs={"timeout": MODEL_RESPONSE_TIMEOUT})
-    system_prompt = SystemMessage(content=SYSTEM_PROMPT_EXTRACTOR)
-    user_prompt = HumanMessage(content=USER_PROMPT_EXTRACTOR_TEMPLATE % (state["finding_start_line"], state["technology"], source_file_content))
-    messages = [system_prompt, user_prompt]
-    response = model.invoke(messages)
-    vulnerable_code_content = response.content
-    updated_state_properties["vulnerable_code_content"] = vulnerable_code_content
-    return updated_state_properties
-
-
 def classify_finding_with_llm(state: WorkflowState) -> dict[str, Any]:
     updated_state_properties = {}
-    # Call the model the classify the findings
-    model = ChatOllama(model=MODEL_NAME, temperature=MODEL_TEMPERATURE, client_kwargs={"timeout": MODEL_RESPONSE_TIMEOUT})
-    system_prompt = SystemMessage(content=SYSTEM_PROMPT_CLASSIFIER)
-    user_prompt = HumanMessage(content=USER_PROMPT_CLASSIFIER_TEMPLATE % (state["cwe_description"], state["finding_description"], state["technology"], state["vulnerable_code_content"]))
-    messages = [system_prompt, user_prompt]
-    response = model.invoke(messages)
-    model_response = response.content
-    # Add the response of the model to the collection of response from previous classification rounds
-    model_responses = state.get("model_responses", [])
-    model_responses.append(str(model_response))
-    updated_state_properties["model_responses"] = model_responses
-    # Add the decision, if the finding is really present or not so YES/NO, to an array to quickly identify if a decision (YES/NO) take the lead across all classification rounds
-    decisions = state.get("model_final_decisions", [])
-    data = json.loads(str(model_response))
-    model_reply = str(data["present"]).title()
-    decisions.append(model_reply)
-    updated_state_properties["model_final_decisions"] = decisions
-    # Decrease the classification round counter
-    validation_round_count = int(state["validation_round_count"])
-    updated_state_properties["validation_round_count"] = validation_round_count - 1
+    current_dir = Path.cwd()
+    project_source_code_base_folder = f"{current_dir}/{VULNERABLE_CODEBASE_HOME}/{state['technology']}"
+    claude_code_call_options = ClaudeAgentOptions(cwd=project_source_code_base_folder, allowed_tools=["Read", "Glob", "Grep"], permission_mode="dontAsk", system_prompt=SYSTEM_PROMPT_CLASSIFIER)
+    # Prepare the user prompt passed to claude code
+    cwe_desc = state["cwe_description"]
+    finding_desc = state["finding_description"]
+    finding_start_line = state["finding_start_line"]
+    finding_file_path = f"{project_source_code_base_folder}/{state['source_file_path']}"
+    user_prompt = USER_PROMPT_CLASSIFIER_TEMPLATE % (cwe_desc, finding_desc, finding_start_line, finding_file_path)
+    # Call claude code
+    model_response = ask_claude(user_prompt, claude_code_call_options)
+    model_response_json = json.loads(model_response)
+    # Add the response of claude code
+    updated_state_properties["model_response"] = model_response_json
+    updated_state_properties["is_real_finding"] = model_response_json["present"].title()
     return updated_state_properties
-
-
-def should_continue(state: WorkflowState) -> str:
-    validation_round_count = int(state["validation_round_count"])
-    if validation_round_count == 0:
-        return END
-    else:
-        return "classify_finding_with_llm"
 
 
 if __name__ == "__main__":
@@ -208,15 +164,12 @@ if __name__ == "__main__":
     ## Add nodes
     agent_builder.add_node("parse_semgrep_record", parse_semgrep_record)
     agent_builder.add_node("retrieve_cwe_information", retrieve_cwe_information)
-    agent_builder.add_node("extract_vulnerable_source_code_with_llm", extract_vulnerable_source_code_with_llm)
     agent_builder.add_node("classify_finding_with_llm", classify_finding_with_llm)
-    agent_builder.add_node("should_continue", should_continue)
     ## Add connections between nodes (called Edge)
     agent_builder.add_edge(START, "parse_semgrep_record")
     agent_builder.add_edge("parse_semgrep_record", "retrieve_cwe_information")
-    agent_builder.add_edge("retrieve_cwe_information", "extract_vulnerable_source_code_with_llm")
-    agent_builder.add_edge("extract_vulnerable_source_code_with_llm", "classify_finding_with_llm")
-    agent_builder.add_conditional_edges("classify_finding_with_llm", should_continue, ["classify_finding_with_llm", END])
+    agent_builder.add_edge("retrieve_cwe_information", "classify_finding_with_llm")
+    agent_builder.add_edge("classify_finding_with_llm", END)
     ## Compile the agent
     agent = agent_builder.compile()
     # Save a representation of the workflow
@@ -230,7 +183,7 @@ if __name__ == "__main__":
         data = json.load(f)
     semgrep_record = data["results"][finding_idx]
     # Invoke the agent
-    input = {"semgrep_record": semgrep_record, "validation_round_count": 3}
+    input = {"semgrep_record": semgrep_record}
     results = agent.invoke(cast(WorkflowState, input))
     for k, v in results.items():
         header = "=" * (len(k) * 2)
@@ -238,10 +191,4 @@ if __name__ == "__main__":
         print(header)
         print(f"ℹ️ {state_key_name}")
         print(header)
-        if k != "model_responses":
-            print(v)
-        else:
-            for round_position in range(len(v)):
-                print(f"==> Classification round n°{round_position}:")
-                pretty_print(v[round_position])
-        print("")
+        print(v)
