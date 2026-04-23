@@ -1,8 +1,9 @@
 package eu.righettod.poc;
 
 import io.modelcontextprotocol.spec.McpSchema;
-import org.springaicommunity.mcp.annotation.*;
-import org.springaicommunity.mcp.context.McpSyncRequestContext;
+
+import org.springframework.ai.mcp.annotation.*;
+import org.springframework.ai.mcp.annotation.context.McpSyncRequestContext;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
