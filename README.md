@@ -36,8 +36,9 @@
 * ✅ [POC01](poc01/): App using a local LLM with RAG.
 * ✅ [POC02](poc02/): App using a local LLM with Tools (Function Calling).
 * ✅ [POC03](poc03/): An MCP server exposing several functions to a local LLM.
-* 🧑‍💻 [POC04](poc04/): App that is an Agent using a local LLM.
-* 🧑‍🎓 POC05: How secure is, from a source code perspective, an app developed using "Vibe Coding".
+* ✅ [POC04](poc04/): App that is an Agent using a local LLM.
+* 🧑‍💻 [POC05](poc05/): Exploration of Claude code skills to build specific feature.
+* 🧑‍🎓 POC06: How secure is, from a source code perspective, an app developed using "Vibe Coding".
 
 ## Threat model
 
