@@ -6,7 +6,7 @@
 
 🤔 I want to explore the way to do threat modeling with Claude code. Precisely, I want to explore such combination leveraging Claude code:
 
-1. Define the list possible attacks (represented by a collection of [evil user story](https://dzone.com/articles/adding-appsec-agile-security)) to enrich the user story.
+1. Define the list of possible attacks (represented by a collection of [evil user story](https://dzone.com/articles/adding-appsec-agile-security)) to enrich the user story.
 2. Use a collection of [security oriented skills](https://github.com/righettod/code-assistant-skills-security-utils) to generate "secure code by default" for the target feature.
 3. Validate that the generated code handle the attacks listed in the user story.
 
