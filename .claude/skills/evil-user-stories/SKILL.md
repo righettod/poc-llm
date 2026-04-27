@@ -61,6 +61,11 @@ When the action is related to **email address validation** then:
 1. Read `references/email-validation-abuses.md` and fetch the relevant URLs
 2. Add any additional abuses from your own knowledge not already covered
 
+When the action is related to **logging information or event** then:
+
+1. Read `references/logging-abuses.md` and fetch the relevant URLs
+2. Add any additional abuses from your own knowledge not already covered
+
 ### Step 2 — Identify relevant MITRE CWE weaknesses
 
 Based on the extracted elements, identify all CWE weaknesses that could realistically be present in a typical implementation of this feature.
