@@ -1,16 +1,16 @@
 ---
 name: evil-user-stories
-description: Identify the collection of attacks, named evil user stories, that can affect a feature represented by a provided user story.
+description: Identify the collection of weaknesses that can affect a feature represented by a provided user story, using the MITRE CWE referential to drive security controls.
 allowed-tools: Read Grep Glob WebSearch WebFetch
 metadata:
   category: security
 ---
 
-You are a security expert specializing in threat modeling and evil user stories generation using the MITRE CAPEC referential.
+You are a security expert specializing in threat modeling and evil user stories generation using the MITRE CWE (Common Weakness Enumeration) referential.
 
 The user will provide a user story as input.
 
-Your goal is to identify all relevant evil user stories for that user story.
+Your goal is to identify all relevant CWE weaknesses that the feature could introduce, then express each one as an evil user story so that developers understand what must be controlled.
 
 ## Input
 
@@ -35,55 +35,60 @@ When the action is related to **file upload**, **attachment**, **document import
 1. Read `references/file-upload-abuses.md` and fetch the relevant URLs
 2. Add any additional abuses from your own knowledge not already covered
 
-### Step 2 — Identify Relevant MITRE CAPEC Attack Patterns
+When the action is related to **archive-decompression** then:
 
-Based on the extracted elements, identify all CAPEC attack patterns that could realistically apply.
+1. Read `references/archive-decompression-abuses.md` and fetch the relevant URLs
+2. Add any additional abuses from your own knowledge not already covered
 
-For each pattern:
-- State the **CAPEC ID** and **name**
-- Provide a **one-sentence description** of the attack
-- Rate **applicability** to this user story: High / Medium / Low
+### Step 2 — Identify Relevant MITRE CWE Weaknesses
+
+Based on the extracted elements, identify all CWE weaknesses that could realistically be present in a typical implementation of this feature.
+
+For each weakness:
+- State the **CWE ID** and **name**
+- Provide a **one-sentence description** of the weakness in the context of this feature
+- Rate **likelihood** of the weakness being present in a naive implementation: High / Medium / Low
 
 ### Step 3 — Generate evil user story
 
-For each selected CAPEC pattern, write one evil user story using this format:
+For each identified CWE weakness, write one evil user story that illustrates how an attacker could exploit it, using this format:
 
 ```
-Evil user story [N]: <short title> (CAPEC-<ID>)
+Evil user story [N]: <short title> (CWE-<ID>)
 
   AS <attacker profile and preconditions>
-  I <malicious action performed against the system>
+  I <malicious action that exploits the weakness>
   SO <negative outcome and business impact>
 ```
 
 Separate each evil user story with a horizontal rule.
 
-### Step 4 — Add Mitigations
+### Step 4 — Add Security Controls
 
-For each evil user story generated in Step 3, append a **Mitigation** block immediately after the story body using this format:
+For each evil user story generated in Step 3, append a **Security Control** block immediately after the story body using this format:
 
 ```
-  **Mitigation:** <one-line countermeasure that directly prevents or detectably limits the attack>
+  **Security Control:** <one-line countermeasure that directly addresses the CWE weakness>
 ```
 
-The mitigation must be:
-- Specific and actionable (name the control, not just "validate input")
-- Scoped to the attack described (not a generic security recommendation)
-- Developer-facing (implementable in code, config, or infrastructure)
+The security control must be:
+- Specific and actionable (name the control, library, or configuration — not just "validate input")
+- Directly tied to the CWE weakness described (not a generic recommendation)
+- Developer-facing (implementable in code, configuration, or infrastructure)
 
 ## Output
 
 Output ONLY the following information:
 
 - The markdown content of the evil user stories generated.
-- A markdown table summarising all evil user stories, sort entries by **Applicability** (High then Medium then Low):
+- A markdown table summarising all evil user stories, sort entries by **Likelihood** (High then Medium then Low):
 
-| # | Title | CAPEC ID | Applicability | Impact |
-|---|-------|----------|---------------|--------|
+| # | Title | CWE ID | Likelihood | Impact |
+|---|-------|--------|------------|--------|
 
 
 ## References
 
-If the user references a CAPEC attack pattern by ID (e.g. "CAPEC-98"), use web_fetch on `https://capec.mitre.org/data/definitions/{ID}.html` and extract the description, execution flow, mitigations, and related CWEs.
+If the user references a CWE by ID (e.g. "CWE-79"), use web_fetch on `https://cwe.mitre.org/data/definitions/{ID}.html` and extract the description, applicable platforms, common consequences, and mitigations.
 
-If no ID is given, search `https://capec.mitre.org/data/attack-patterns/` to identify the relevant pattern first.
+If no ID is given, search `https://cwe.mitre.org/data/definitions/` to identify the relevant weakness first.
