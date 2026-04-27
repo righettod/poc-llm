@@ -1,6 +1,6 @@
 ---
 name: evil-user-stories
-description: Identify the collection of weaknesses that can affect a feature represented by a provided user story, using the MITRE CWE referential to drive security controls.
+description: Threat-model a feature described as a user story. Generates evil user stories (AS/I/SO format) mapped to MITRE CWE weaknesses, each paired with a concrete security control. Use when a user story describes a new feature to build (upload, email, search, API, auth, archive, etc.) and the goal is to identify what security controls must be implemented.
 allowed-tools: Read Grep Glob WebSearch WebFetch
 metadata:
   category: security
@@ -40,6 +40,12 @@ When the action is related to **archive-decompression** then:
 1. Read `references/archive-decompression-abuses.md` and fetch the relevant URLs
 2. Add any additional abuses from your own knowledge not already covered
 
+When the action is related to **Web API** then:
+
+1. Read `references/web-api-abuses.md` and fetch the relevant URLs
+2. Ensure that there is a evil user story to prevent the usage of a guessable identifier for a record identifier. the goal is to prevent exposure to [Insecure Direct Object References](https://portswigger.net/web-security/access-control/idor) attacks
+3. Add any additional abuses from your own knowledge not already covered
+
 ### Step 2 — Identify Relevant MITRE CWE Weaknesses
 
 Based on the extracted elements, identify all CWE weaknesses that could realistically be present in a typical implementation of this feature.
@@ -57,7 +63,7 @@ For each identified CWE weakness, write one evil user story that illustrates how
 Evil user story [N]: <short title> (CWE-<ID>)
 
   AS <attacker profile and preconditions>
-  I <malicious action that exploits the weakness>
+  I WANT TO <malicious goal> BY <technical action exploiting the weakness>
   SO <negative outcome and business impact>
 ```
 
@@ -78,7 +84,7 @@ The security control must be:
 
 ## Output
 
-Output ONLY the following information:
+Output the following information:
 
 - The markdown content of the evil user stories generated.
 - A markdown table summarising all evil user stories, sort entries by **Likelihood** (High then Medium then Low):

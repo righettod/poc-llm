@@ -20,7 +20,7 @@
 ## Topologies
 
 > [!NOTE]
-> Ollama is used to run the local LLM and java is used for the app technology.
+> Ollama is used to run the local LLM and java/python are used for the app technologies.
 
 📁 Each POC have its own folder.
 
@@ -30,14 +30,14 @@
 * 🧑‍💻 POC **in progress**.
 * ✅ POC **finished** and information centralized.
 
-🎯 I want to explore the following topologies:
+🎯 I want to explore the following topologies & concepts:
 
 * ✅ [POC00](poc00/): App using a local LLM only.
 * ✅ [POC01](poc01/): App using a local LLM with RAG.
 * ✅ [POC02](poc02/): App using a local LLM with Tools (Function Calling).
 * ✅ [POC03](poc03/): An MCP server exposing several functions to a local LLM.
 * ✅ [POC04](poc04/): App that is an Agent using a local LLM.
-* 🧑‍💻 [POC05](poc05/): Exploration of Claude code skills to build specific feature.
+* 🧑‍💻 [POC05](poc05/): Exploration of Claude code skills to perform [threat modeling](https://en.wikipedia.org/wiki/Threat_model) activity against a [User Story](https://www.atlassian.com/agile/project-management/user-stories).
 * 🧑‍🎓 POC06: How secure is, from a source code perspective, an app developed using "Vibe Coding".
 
 ## Threat model
