@@ -14,4 +14,7 @@
 
 ## Content
 
+> [!IMPORTANT]
+> For the **reference** files, when possible, a GitHub reference was added pointing directly to the file (ideally a markdown one) to help the web search tool of claude code to extract useful data.
+
 📄 All files of the POC are stored in folder `.claude/skills/evil-user-stories` ([ref](../.claude/skills/evil-user-stories/)).

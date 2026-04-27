@@ -46,7 +46,22 @@ When the action is related to **Web API** then:
 2. Ensure that there is a evil user story to prevent the usage of a guessable identifier for a record identifier. the goal is to prevent exposure to [Insecure Direct Object References](https://portswigger.net/web-security/access-control/idor) attacks
 3. Add any additional abuses from your own knowledge not already covered
 
-### Step 2 — Identify Relevant MITRE CWE Weaknesses
+When the action is related to **XML parsing** then:
+
+1. Read `references/xml-parsing-abuses.md` and fetch the relevant URLs
+2. Add any additional abuses from your own knowledge not already covered
+
+When the action is related to **CSV (Comma Separated Values) generation** then:
+
+1. Read `references/csv-generation-abuses.md` and fetch the relevant URLs
+2. Add any additional abuses from your own knowledge not already covered
+
+When the action is related to **email address validation** then:
+
+1. Read `references/email-validation-abuses.md` and fetch the relevant URLs
+2. Add any additional abuses from your own knowledge not already covered
+
+### Step 2 — Identify relevant MITRE CWE weaknesses
 
 Based on the extracted elements, identify all CWE weaknesses that could realistically be present in a typical implementation of this feature.
 
@@ -69,7 +84,7 @@ Evil user story [N]: <short title> (CWE-<ID>)
 
 Separate each evil user story with a horizontal rule.
 
-### Step 4 — Add Security Controls
+### Step 4 — Add security controls
 
 For each evil user story generated in Step 3, append a **Security Control** block immediately after the story body using this format:
 
