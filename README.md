@@ -177,7 +177,7 @@ So, I moved back to `.responseFormat(ResponseFormat.TEXT)` to use TEXT format, i
 ### Training
 
 * [SEC545: GenAI and LLM Application Security](https://www.sans.org/cyber-security-courses/genai-llm-application-security-5day).
-  * 📅 Planned.
+  * ✅ Followed.
 
 ### OWASP
 
