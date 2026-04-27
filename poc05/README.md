@@ -10,7 +10,7 @@
 2. Use a collection of [security oriented skills](https://github.com/righettod/code-assistant-skills-security-utils) to generate "secure code by default" for the target feature.
 3. Validate that the generated code handle the attacks listed in the user story.
 
-🔬 My final objective is to make *security aspect transparent for a DevOps team* by leveraging the power of code specialized language models and code assistant.
+🔬 My final objective is to make *security aspect transparent for a DevOps team* by leveraging the power of code specialized language models and a coding assistant.
 
 ## Content
 
