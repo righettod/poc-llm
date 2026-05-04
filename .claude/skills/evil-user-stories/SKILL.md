@@ -28,12 +28,16 @@ Extract the following elements:
 - **Action**: What operation is performed
 - **Asset**: What data or resource is involved
 - **Goal**: The business benefit expected
+- **Technology**: The technology that will be used to implement the feature
 - **Trust boundaries**: Implicit boundaries crossed (authentication, authorization, network, etc.)
+
+When the the target technology is not mentioned then you ask for it.
 
 When the action is related to **file upload**, **attachment**, **document import**, **media upload**, **user-submitted files** then you must ask which types of file is expected to be supported. Based on the response:
 
 1. Read `references/file-upload-abuses.md` and fetch the relevant URLs
-2. Add any additional abuses from your own knowledge not already covered
+2. Read `references/microsoft-word-excel-validation-abuses.md` and fetch the relevant URLs
+3. Add any additional abuses from your own knowledge not already covered
 
 When the action is related to **archive-decompression** then:
 
@@ -66,6 +70,16 @@ When the action is related to **logging information or event** then:
 1. Read `references/logging-abuses.md` and fetch the relevant URLs
 2. Add any additional abuses from your own knowledge not already covered
 
+When the action is related to **URI or URL validation** then:
+
+1. Read `references/url-validation-abuses.md` and fetch the relevant URLs
+2. Add any additional abuses from your own knowledge not already covered
+
+When the action is related to **Microsoft Word or Excel file processing** then:
+
+1. Read `references/microsoft-word-excel-validation-abuses.md` and fetch the relevant URLs
+2. Add any additional abuses from your own knowledge not already covered
+
 ### Step 2 — Identify relevant MITRE CWE weaknesses
 
 Based on the extracted elements, identify all CWE weaknesses that could realistically be present in a typical implementation of this feature.
@@ -89,18 +103,34 @@ Evil user story [N]: <short title> (CWE-<ID>)
 
 Separate each evil user story with a horizontal rule.
 
+<!-- 
+For the section below: Ideally a dedicated local reference MD file with all specific security quirks should be used instead to not overload the context window.
+The reference below was just for the POC.
+-->
+
+The section `Hints regarding languages specificities for identification of weaknesses` of this resource `https://github.com/righettod/toolbox-pentest-web/blob/master/docs/8-CODEREVIEW_UTILS.md` must be used to identify **any applicable specific security quirk for the target technology** in addition to your own knowledge.
+
 ### Step 4 — Add security controls
 
 For each evil user story generated in Step 3, append a **Security Control** block immediately after the story body using this format:
 
 ```
-  **Security Control:** <one-line countermeasure that directly addresses the CWE weakness>
+  **Security Control:** 
+    - Proposed countermeasure: <one-line countermeasure that directly addresses the CWE weakness>
+    - Applicable library: <one-line with the name of a library that can help to create or perform the countermeasure proposed>
 ```
 
 The security control must be:
-- Specific and actionable (name the control, library, or configuration — not just "validate input")
+- Specific and actionable (name the control, library, or configuration — not just "validate input") for the technology specified
 - Directly tied to the CWE weakness described (not a generic recommendation)
 - Developer-facing (implementable in code, configuration, or infrastructure)
+
+<!-- 
+For the section below: Ideally a dedicated local reference MD file with applicable libraries should be used instead to not overload the context window.
+The reference below was just for the POC.
+-->
+
+For libraries recommanded to use for a security control: The section `Hints regarding languages specificities for remediation` of this resource `https://github.com/righettod/toolbox-pentest-web/blob/master/docs/8-CODEREVIEW_UTILS.md` must be used to identify **any applicable libraries for the target technology** in addition to your own knowledge.
 
 ## Output
 
