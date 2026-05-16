@@ -1,7 +1,7 @@
 ---
 name: evil-user-stories
 description: Threat-model a feature described as a user story. Generates evil user stories (AS/I/SO format) mapped to MITRE CWE weaknesses, each paired with a concrete security control. Use when a user story describes a new feature to build (upload, email, search, API, auth, archive, etc.) and the goal is to identify what security controls must be implemented.
-allowed-tools: Read Grep Glob WebSearch WebFetch
+allowed-tools: Read Grep Glob WebSearch WebFetch Write
 metadata:
   category: security
 ---
@@ -141,6 +141,21 @@ Output the following information:
 
 | # | Title | CWE ID | Likelihood | Impact |
 |---|-------|--------|------------|--------|
+
+After displaying the output, save the entire content to a file named `IdentifiedEvilUserStories.md` in the current working directory using the Write tool. The file must begin with the following header section before any generated content:
+
+```
+# Evil User Stories
+
+## Input User Story
+
+> $ARGUMENTS
+
+---
+
+```
+
+Then append all generated content (evil user stories and summary table) after the header.
 
 
 ## References
