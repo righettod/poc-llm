@@ -11,7 +11,8 @@
 🤔 In this case, the context is that I received a code base and I want to use claude code to give me the following overview:
 
 ```text
-A visual overview of the information entry points and where the information land including the type of processing and if such processing can be risky from a security perspective.
+A visual overview of the information entry points and where the information land including the type of processing
+and if such processing can be risky from a security perspective.
 ```
 
 📦 User prompt is stored as as `claude code command` into the file in the folder `.claude/commands/codebase-overview.md` ([ref](../.claude/commands/codebase-overview.md)).
