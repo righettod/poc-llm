@@ -6,7 +6,7 @@
 
 ### Case 1: Codebase overview
 
-> 💡 Terms I used *entry* means *source* and *landing* means *sink*.
+> 📖 Terms I used: **`entry`** means *`source`* and **`landing`** means *`sink`*.
 
 🤔 In this case, the context is that I received a code base and I want to use claude code to give me the following overview:
 
@@ -121,3 +121,8 @@ flowchart LR
     classDef high fill:#fdd,stroke:#c00,color:#900
     classDef med fill:#ffe9c7,stroke:#e08e00
 ```
+
+## References
+
+* <https://en.wikipedia.org/wiki/Sink_(computing)>
+* <https://breachforce.net/source-and-sinks>
