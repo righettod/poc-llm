@@ -12,11 +12,11 @@
 
 🤖 Use it via this instruction inside a claude code session: `/codebase-overview [RELATIVE_PATH_TO_CODEBASE]`.
 
-ℹ️ Forms legend:
+ℹ️ Forms legend (terms used *entry* == *source* and *landing* == *sink*):
 
-* **Hexagon** form represent an entry points.
-* **Rectangle** form represent a custom-code landing points with a TAG to indicate the type of processing performed and colored if such processing can be risky from a security perspective.
-* **Circle** form represent a third-party library landing points and colored if processing performed can be risky from a security perspective.
+* **Hexagon** form represent an *entry* points.
+* **Rectangle** form represent a custom-code *landing* points with a TAG to indicate the type of processing performed and colored if such processing can be risky from a security perspective.
+* **Circle** form represent a third-party library *landing* points and colored if processing performed can be risky from a security perspective.
 
 🔬 Example of generated schema againt the source code of [OWASP WebGoat](https://github.com/WebGoat/WebGoat) using the download of a zip archive of the *main* branch:
 
