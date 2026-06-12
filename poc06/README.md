@@ -19,6 +19,8 @@ and if such processing can be risky from a security perspective.
 
 🤖 Use it via this instruction inside a claude code session: `/codebase-overview [RELATIVE_PATH_TO_CODEBASE]`.
 
+✅ The generated Mermaid code was validated using the [Mermaid Live](https://mermaid.live/) editor to check its rendering, readability, and the effectiveness of the generated diagram. The Mermaid format was chosen because it is a text-based format; it can therefore be modified after generation if necessary or sent to a LLM for additional analysis rounds.
+
 ℹ️ Forms legend:
 
 * **Hexagon** form represent an *entry* points.
