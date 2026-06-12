@@ -8,7 +8,7 @@
 
 🤔 In this case, the context is that I received a code base and I want to use claude code to give me a visual overview of the different modules/packages.
 
-📦 User prompt is stored as as `claude code command` into the file in the folder `.claude/commands/codebase-overview.md` ([ref](../.claude/commandscodebase-overview.md)).
+📦 User prompt is stored as as `claude code command` into the file in the folder `.claude/commands/codebase-overview.md` ([ref](../.claude/commands/codebase-overview.md)).
 
 🤖 Use it via this instruction inside a claude code session: `/codebase-overview [RELATIVE_PATH_TO_CODEBASE]`.
 
