@@ -15,11 +15,11 @@ A visual overview of the information entry points and where the information land
 and if such processing can be risky from a security perspective.
 ```
 
-📦 User prompt is stored as as `claude code command` into the file in the folder `.claude/commands/codebase-overview.md` ([ref](../.claude/commands/codebase-overview.md)).
+📦 User prompt is stored, as as `claude code command`, into the file in the folder `.claude/commands/codebase-overview.md` ([ref](../.claude/commands/codebase-overview.md)).
 
 🤖 Use it via this instruction inside a claude code session: `/codebase-overview [RELATIVE_PATH_TO_CODEBASE]`.
 
-ℹ️ Forms legend (terms used *entry* == *source* and *landing* == *sink*):
+ℹ️ Forms legend:
 
 * **Hexagon** form represent an *entry* points.
 * **Rectangle** form represent a custom-code *landing* points with a TAG to indicate the type of processing performed and colored if such processing can be risky from a security perspective.
