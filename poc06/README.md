@@ -2,13 +2,13 @@
 
 ## General goals
 
-🎯 The goal of this POC is to explore the capability to leverage claude code to perform a secure code review of a code base.
+🎯 The goal of this POC is to explore the capability to leverage claude code to perform a secure code review of a codebase.
 
 ### Case 1: Codebase overview
 
 > 📖 Terms I used: **`entry`** means *`source`* and **`landing`** means *`sink`*.
 
-🤔 In this case, the context is that I received a code base and I want to use claude code to give me the following overview:
+🤔 In this case, the context is that I received a codebase and I want to use claude code to give me the following overview:
 
 ```text
 A visual overview of the information entry points and where the information land including the type of processing
