@@ -27,6 +27,8 @@ and if such processing can be risky from a security perspective.
 * **Rectangle** form represent a custom-code *landing* points with a TAG to indicate the type of processing performed and colored if such processing can be risky from a security perspective.
 * **Circle** form represent a third-party library *landing* points and colored if processing performed can be risky from a security perspective.
 
+ℹ️ Node label naming conventions is defined into the section **[Output rules](../.claude/commands/codebase-overview.md#output-rules)** section of the command file.
+
 🔬 Example of generated schema againt the source code of [OWASP WebGoat](https://github.com/WebGoat/WebGoat) using the download of a zip archive of the *main* branch:
 
 ```mermaid
