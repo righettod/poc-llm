@@ -2,11 +2,11 @@
 
 ## General goals
 
+> 📖 Terms I used: **`entry`** means *`source`* and **`landing`** means *`sink`*.
+
 🎯 The goal of this POC is to explore the capability to leverage claude code to perform a secure code review of a codebase.
 
 ### Case 1: Codebase overview
-
-> 📖 Terms I used: **`entry`** means *`source`* and **`landing`** means *`sink`*.
 
 🤔 In this case, the context is that I received a codebase and I want to use claude code to give me the following overview:
 
@@ -125,6 +125,14 @@ flowchart LR
     classDef high fill:#fdd,stroke:#c00,color:#900
     classDef med fill:#ffe9c7,stroke:#e08e00
 ```
+
+### Case 2: Codebase hotspots
+
+🤔 In this case, the context is that I received a codebase and I want to use claude code to give point to code that does risky processing from a security perspective (called **hotspot*).
+
+📦 User prompt is stored, as as `claude code command`, into the file in the folder `.claude/commands/codebase-hotspots.md` ([ref](../.claude/commands/codebase-hotspots.md)).
+
+🤖 Use it via this instruction inside a claude code session: `/codebase-hotspots [RELATIVE_PATH_TO_CODEBASE]`.
 
 ## References
 
