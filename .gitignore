@@ -2,6 +2,11 @@ poc*/target/
 poc*/*/target/
 poc04/sub_poc_gitleaks/gitleaks-fake-data/
 poc06/codebase*/
+poc06/findings.json
+poc06/Semgrep-Review-*.md
 save.ps1
 IdentifiedEvilUserStories.md
 Findings*.md
+findings.json
+Semgrep-Review-*.md
+codebase1/

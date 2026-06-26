@@ -6,6 +6,24 @@
 
 🎯 The goal of this POC is to explore the capability to leverage claude code to perform a secure code review of a codebase.
 
+🔬 Process I imagined against a codebase using claude code session:
+
+🧑‍💻 Intital into a claude code session **at the root folder of the codebase**:
+
+1. Start a new claude code session: *Important to isolate the processing from a context perspective*.
+2. Call the command [`codebase-overview`](#case-1-codebase-overview) to have a global visual overview of the risky sinks.
+
+🧑‍💻 For each module of the codebase into a claude code session **at the root folder of the module**, apply these steps:
+
+1. Scan the code with SemGrep to identify issues using a pattern-based approach: Goal is to identify issues not linked to a entry point, like for example, a deprecated algorithm used but not called from an entry point.
+2. Start a new claude code session: *Important to isolate the processing from a context perspective*.
+3. Call the command [`codebase-semgrep-findings-review`](#case-3-review-the-semgrep-scan-of-the-codebase) to filter false positive findings from the SemGrep scan results.
+4. Start a new claude code session: *Important to isolate the processing from a context perspective*.
+5. Call the command [`codebase-hotspots`](#case-2-codebase-hotspots) to identify entry point that leads to risk processing from a security perspective.
+6. Review and manually validate the result of step **3** + step **5**.
+
+💡 A approach by module is used to speed-up the review.
+
 ### Case 1: Codebase overview
 
 🤔 In this case, the context is that I received a codebase and I want to use claude code to give me the following overview:
@@ -15,21 +33,21 @@ A visual overview of the information entry points and where the information land
 and if such processing can be risky from a security perspective.
 ```
 
-📦 User prompt is stored, as as `claude code command`, into the file in the folder `.claude/commands/codebase-overview.md` ([ref](../.claude/commands/codebase-overview.md)).
+📦 User prompt is stored, as `claude code command`, into the file in the folder `.claude/commands/codebase-overview.md` ([ref](../.claude/commands/codebase-overview.md)).
 
 🤖 Use it via this instruction inside a claude code session: `/codebase-overview [RELATIVE_PATH_TO_CODEBASE]`.
 
-✅ The generated Mermaid code was validated using the [Mermaid Live](https://mermaid.live/) editor to check its rendering, readability, and the effectiveness of the generated diagram. The Mermaid format was chosen because it is a text-based format; it can therefore be modified after generation if necessary or sent to a LLM for additional analysis rounds.
+✅ The generated Mermaid code was validated using the [Mermaid Live](https://mermaid.live/) editor to check its rendering, readability, and the effectiveness of the generated diagram. The Mermaid format was chosen because it is a text-based format; it can therefore be modified after generation if necessary or sent to an LLM for additional analysis rounds.
 
 ℹ️ Forms legend:
 
-* **Hexagon** form represent an *entry* points.
-* **Rectangle** form represent a custom-code *landing* points with a TAG to indicate the type of processing performed and colored if such processing can be risky from a security perspective.
-* **Circle** form represent a third-party library *landing* points and colored if processing performed can be risky from a security perspective.
+* **Hexagon** form represents a *entry* point.
+* **Rectangle** form represents a custom code *landing* points with a TAG to indicate the type of processing performed and colored if such processing can be risky from a security perspective.
+* **Circle** form represents a third-party library *landing* points and colored if processing performed can be risky from a security perspective.
 
 ℹ️ Node label naming conventions is defined into the section **[Output rules](../.claude/commands/codebase-overview.md#output-rules)** section of the command file.
 
-🔬 Example of generated schema againt the source code of [OWASP WebGoat](https://github.com/WebGoat/WebGoat) using the download of a zip archive of the *main* branch:
+🔬 Example of generated schema against the source code of [OWASP WebGoat](https://github.com/WebGoat/WebGoat) using the download of a zip archive of the *main* branch:
 
 ```mermaid
 flowchart LR
@@ -130,9 +148,23 @@ flowchart LR
 
 🤔 In this case, the context is that I received a codebase and I want to use claude code to give point to code that does risky processing from a security perspective (called **hotspot*).
 
-📦 User prompt is stored, as as `claude code command`, into the file in the folder `.claude/commands/codebase-hotspots.md` ([ref](../.claude/commands/codebase-hotspots.md)).
+📦 User prompt is stored, as `claude code command`, into the file in the folder `.claude/commands/codebase-hotspots.md` ([ref](../.claude/commands/codebase-hotspots.md)).
 
 🤖 Use it via this instruction inside a claude code session: `/codebase-hotspots [RELATIVE_PATH_TO_CODEBASE]`.
+
+### Case 3: Review the SemGrep scan of the codebase
+
+🤔 In this case, I scanned the codebase with SemGrep to identify issues not linked to a entry point, like for example, a deprecated algorithm used but not called from an entry point.
+
+📦 User prompt is stored, as `claude code command`, into the file in the folder `.claude/commands/codebase-semgrep-findings-review.md` ([ref](../.claude/commands/codebase-semgrep-findings-review.md)).
+
+🤖 Use it via this instruction inside a claude code session: `/codebase-semgrep-findings-review [PATH_TO_SEMGREP_REPORT] [RELATIVE_PATH_TO_CODEBASE] [MINIMUM_CONFIDENCE_LEVEL]`.
+
+💡 `[MINIMUM_CONFIDENCE_LEVEL]`: Minimum confidence threshold for inclusion in output, accepted values are:
+
+* `CONFIRMED`: Only confirmed findings.
+* `PARTIAL`: Confirmed + needs-human-review findings.
+* Default: `PARTIAL` - `FALSE_POSITIVE` verdicts are always excluded from the findings list but are recorded in the summary table.
 
 ## References
 
