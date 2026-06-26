@@ -17,7 +17,7 @@
 > [!IMPORTANT]
 > For the **reference** files, when possible, a GitHub reference was added pointing directly to the file (ideally a markdown one) to help the web search tool of claude code to extract useful data.
 
-📄 All files of the POC are stored in the folder `.claude/skills/evil-user-stories` ([ref](../.claude/skills/evil-user-stories/)).
+📄 All files of the POC are stored in the folder `.claude/commands/evil-user-stories` ([ref](../.claude/commands/evil-user-stories/)).
 
 📖 Assuming this compact user story content (represented by `[USER_STORY_CONTENT]` in following instructions): `As a registered user, I want to upload a file from my device to the platform, So that I can share necessary documentation for my account processing. File type supported is 'PDF'. The target technology is 'PYTHON'`.
 
@@ -38,5 +38,5 @@
 🧑‍💻 Same from the **claude code** command line:
 
 ```bash
-claude --verbose --output-format stream-json --max-turns 10 --allowedTools "Read,Grep,Glob,WebSearch,WebFetch,Write,Bash,Skill" -p "[USER_STORY_CONTENT]"
+claude --verbose --output-format stream-json --max-turns 10 --allowedTools "Read,Grep,Glob,WebSearch,WebFetch,Write" -p "/evil-user-stories [USER_STORY_CONTENT]"
 ```

@@ -1,9 +1,7 @@
 ---
-name: evil-user-stories
 description: Threat-model a feature described as a user story. Generates evil user stories (AS/I/SO format) mapped to MITRE CWE weaknesses, each paired with a concrete security control. Use when a user story describes a new feature to build (upload, email, search, API, auth, archive, etc.) and the goal is to identify what security controls must be implemented.
-allowed-tools: Read Grep Glob WebSearch WebFetch Write
-metadata:
-  category: security
+argument-hint: <USER_STORY_CONTENT>
+allowed-tools: Read, Grep, Glob, WebSearch, WebFetch, Write
 ---
 
 You are a security expert specializing in threat modeling and evil user stories generation using the MITRE CWE (Common Weakness Enumeration) referential.
