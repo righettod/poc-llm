@@ -41,7 +41,7 @@
 - ✅ [POC02](poc02/): App using a local LLM with Tools (Function Calling).
 - ✅ [POC03](poc03/): An MCP server exposing several functions to a local LLM.
 - ✅ [POC04](poc04/): App that is an Agent using a local LLM.
-- ✅ [POC05](poc05/): Exploration of Claude code skills to perform [threat modeling](https://en.wikipedia.org/wiki/Threat_model) activity against a [User Story](https://www.atlassian.com/agile/project-management/user-stories).
+- ✅ [POC05](poc05/): Exploration of Claude code command to perform [threat modeling](https://en.wikipedia.org/wiki/Threat_model) activity against a [User Story](https://www.atlassian.com/agile/project-management/user-stories).
 - 🧑‍💻 [POC06](poc06/): Explore the capability to leverage claude code to perform a secure code review of a code base.
 
 ## Threat model
