@@ -1,6 +1,6 @@
 # POC n°6
 
-> 💡 This POC has led to the creation of this project [toolbox-ai-assisted-secure-code-review](https://github.com/righettod/toolbox-ai-assisted-secure-code-review).
+> 💡 This POC has led to the creation of this project: [toolbox-ai-assisted-secure-code-review](https://github.com/righettod/toolbox-ai-assisted-secure-code-review).
 
 ## General goals
 
