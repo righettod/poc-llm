@@ -11,7 +11,7 @@
 * I use many times a dedicated **skill** in order to leverage as much as possible, the capabilities of a coding assistant as it can easily access to the codebase.
 * I used Claude to validate/challenge my idea, from Claude code perspective, as it is the coding assistant I used.
 
-💡 Ideas:
+## Ideas
 
 ```mermaid
 kanban
