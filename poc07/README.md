@@ -32,7 +32,7 @@ kanban
     step03[Deploy]              
         step03-task00["Use a skill to generate a list of files from the code base that must never be present in the deployed app in order to use such file in a fuzzing tool to check they are not present."]
         step03-task01["Leverage the project documentation, RAG (local db) and a local model to create a small chatbot to easily epxlore the documentation of the project. Useful to integrate newcomers. See the 'docs-chatbot' reference for an example."]        
-        step03-task01["Integrate the content of the SBOM in the RAG data to allow searching for dependencies in the chatbot."]                
+        step03-task02["Integrate the content of the SBOM in the RAG data to allow searching for dependencies in the chatbot."]                
 ```
 
 ## References
