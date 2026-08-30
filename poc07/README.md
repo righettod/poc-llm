@@ -6,9 +6,9 @@
 
 ```mermaid
 kanban
-    step01[Requirements]
+    step01[Planning/Requirements]
         step01-task00[Use a skill to create the collection of evil user stories for each user story.]
-    step02[Development]
+    step02[Design/Development]
         step02-task00[Use skills with predefined security checks for specific type of features. The goal is to have any code generated with the expected security check in place.]
         step02-task01[Use a skill to generate a test case for each evil user stories to ensure that the code base handle it.]
     step03[Testing]    
