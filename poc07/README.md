@@ -23,15 +23,15 @@ kanban
         step01-task02["Use a skill that will ensure that every access point of the codebase exposed to users is protected by an authorization constraint.<br/>⚠️ **also Enforce this in CI during the Testing phase.**"] 
         step01-task03["Use a skill that will ensure the configuration properties used into the app do not contain unsafe value or default value that is unsafe.<br/>⚠️ **also Enforce this in CI during the Testing phase.**"]       
         step01-task04["Use a skill that will ensure that every access point of the codebase exposed to users defines the explicit HTTP method used, the media type consumed, the media type produced.<br/>⚠️ **also Enforce this in CI during the Testing phase.**"]                  
-        step01-task05["Use a skill that setup the development environment from scrach for a newcomers in the DevOps teams using all teams and company conventions including security ones."]                          
+        step01-task05["Use a skill that set up the development environment from scratch for a newcomer in the DevOps teams using all teams and company conventions including security ones."]                          
     step02[Testing]    
         step02-task00["In CI use a skill to review the findings of a SAST scan to remove false positive."]
         step02-task01["In CI use a skill to analyze the code from user input perspective to identify flaws reachable by a user."]
-        step02-task02["In CI use a skill to update the project documentation based on the real state of the code base.<br/>💡 Generate it in markdow format and store it into the SCM."]     
+        step02-task02["In CI use a skill to update the project documentation based on the real state of the code base.<br/>💡 Generate it in markdown format and store it into the SCM."]     
         step02-task03["In CI, in a sandbox (docker container) to handle compromised release, try to use the latest release of every library, if something fails then ask to the code assistant to propose a PR with the code to update."]     
     step03[Deploy]              
         step03-task00["Use a skill to generate a list of files from the code base that must never be present in the deployed app in order to use such file in a fuzzing tool to check they are not present."]
-        step03-task01["Leverage the project documentation, RAG (local db) and a local model to create a small chatbot to easily epxlore the documentation of the project. Useful to integrate newcomers. See the 'docs-chatbot' reference for an example."]        
+        step03-task01["Leverage the project documentation, RAG (local db) and a local model to create a small chatbot to easily explore the documentation of the project. Useful to integrate newcomers. See the 'docs-chatbot' reference for an example."]        
         step03-task02["Integrate the content of the SBOM in the RAG data to allow searching for dependencies in the chatbot."]                
 ```
 
