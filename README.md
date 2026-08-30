@@ -44,6 +44,7 @@
 - ✅ [POC05](poc05/): Exploration of Claude code command to perform [threat modeling](https://en.wikipedia.org/wiki/Threat_model) activity against a [User Story](https://www.atlassian.com/agile/project-management/user-stories).
 - ✅ [POC06](poc06/): Explore the capability to leverage claude code to perform a secure code review of a code base.
 - 🧑‍💻 [POC07](poc07/): Try to map for a SDLC every step in which GenAI can be used or bring useful help.
+- 🧑‍🎓 POC08: Explore the capability to develop a set of agents to evaluate the security of REST API endpoints.
 
 ## Threat model
 
