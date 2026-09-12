@@ -29,11 +29,11 @@ kanban
         step02-task01["In CI use a skill to analyze the code from user input perspective to identify flaws reachable by a user."]
         step02-task02["In CI use a skill to update the project documentation based on the real state of the code base.<br/>💡 Generate it in markdown format and store it into the SCM."]     
         step02-task03["In CI, in a sandbox (docker container) to handle compromised release, try to use the latest release of every library, if something fails then ask to the code assistant to propose a PR with the code to update."]
-        step02-task04["In CI, use a dedicated agent to ensure that any of the internal package used<br/>is not present into the corresponding public package repository<br/>(maven,npm,pypi,nuget,etc.)."]
+        step02-task04["In CI, use a dedicated agent to ensure that any of the internal package used<br/>is not present into the corresponding public package repository like maven/npm/pypi/etc."]
     step03[Deploy]              
         step03-task00["Use a skill to generate a list of files from the code base that must never be present in the deployed app in order to use such file in a fuzzing tool to check they are not present."]
         step03-task01["Leverage the project documentation, RAG (local db) and a local model to create a small chatbot to easily explore the documentation of the project. Useful to integrate newcomers. See the 'docs-chatbot' reference for an example."]        
-        step03-task02["Integrate the content of the SBOM in the RAG data to allow searching for dependencies in the chatbot."]                
+        step03-task02["Integrate the content of the SBOM in the RAG data to allow searching for dependencies in the chatbot."]                 
 ```
 
 ## References
