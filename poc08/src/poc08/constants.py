@@ -144,6 +144,8 @@ Authentication: $authentication_mode
 
 OOB listener: $oob_listener_url
 
+OOB usage required: $oob_usage_required
+
 ## Current Test
 
 $test_section_markdown

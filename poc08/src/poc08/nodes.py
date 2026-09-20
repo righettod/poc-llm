@@ -169,6 +169,7 @@ def evaluate(state: WorkflowState) -> WorkflowState:
             body=base_request.body,
             authentication_mode=security_test["authentication_mode"],
             oob_listener_url=state["oob_web_listener_url"],
+            oob_usage_required=str(security_test["oob_required"]),
             test_section_markdown=test_section_markdown,
             tests_performed=security_tests_performed_counter,
             tests_total=security_tests_total,
