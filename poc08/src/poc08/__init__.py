@@ -1,2 +1,1 @@
-def main() -> None:
-    print("Hello from poc08!")
+# do not delete me

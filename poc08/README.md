@@ -9,4 +9,4 @@
 
 🤔 My real goal is to have a agent able to completely assess an REST API endpoint based on a sample request.
 
-🔬 The file [CLAUDE.md](CLAUDE.md) describe the architecture and design choices
+🔬 The file [CLAUDE.md](CLAUDE.md) describe the architecture and design choices.

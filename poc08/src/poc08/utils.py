@@ -6,7 +6,7 @@ import re
 import uuid
 from pathlib import Path
 
-from nodes import HttpRequest, SecurityTest
+from .nodes import HttpRequest, SecurityTest
 
 
 def is_in_scope(host: str) -> bool:
@@ -138,3 +138,7 @@ def load_security_tests(file_path: str) -> list[SecurityTest]:
         )
 
     return tests
+
+
+def get_access_token() -> tuple[str, str]:
+    return ("Authorization", "Bearer ABCDEF")

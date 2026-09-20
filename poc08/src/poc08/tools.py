@@ -8,13 +8,15 @@ BaseModel for tool inputs/outputs:
 - You also get runtime validation and clean attribute access
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import Literal
 
 import httpx
-from constants import HTTP_REQUEST_TIMEOUT_IN_SECONDS
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
-from utils import is_in_scope
+
+from .constants import HTTP_REQUEST_TIMEOUT_IN_SECONDS
+from .utils import get_access_token, is_in_scope
 
 ####
 # Data container
@@ -32,43 +34,40 @@ class HttpRequestResult(BaseModel):
     error_reason: str | None = Field(default=None, description="Human readable explanation of the error, only present when error is set")
 
 
-class AccessTokenResult(BaseModel):
-    auth_header_name: str = Field(description="Name of the HTTP header carrying the authentication value — e.g. Authorization, Cookie, X-Api-Key")
-    auth_header_value: str = Field(description="Full header value formatted and ready to use — e.g. Bearer eyJ..., session=abc123")
-    error: str | None = Field(default=None, description="Error type if the token could not be fetched")
-    error_reason: str | None = Field(default=None, description="Human readable explanation of the error, only present when error is set")
-
-
-class SecurityTest(BaseModel):
-    test_id: str = Field(description="Unique identifier for the test — derived from the markdown section heading")
-    test_name: str = Field(description="Human readable name of the test")
-    source: str = Field(description="Origin of the test — owasp or custom")
-    owasp_ref: str = Field(description="OWASP API Top 10 reference — e.g. API1:2023, or none if not applicable")
-    severity: str = Field(description="Baseline severity — critical, high, medium, low, or info")
-    auth_mode: str = Field(description="Authentication mode — authenticated, anonymous, or both")
-    oob_required: bool = Field(description="Whether the OOB listener URL should be embedded in payloads for this test")
-    what_to_do: str = Field(description="Test steps for the agent")
-    what_to_look_for: str = Field(description="Success or failure indicators to observe in the response")
-    section_markdown: str = Field(description="Full raw markdown section for this test as it appears in the test file")
-
-
-class SecurityTestsResult(BaseModel):
-    tests: list[SecurityTest] = Field(description="Ordered list of security tests parsed from the markdown test file")
-    error: str | None = Field(default=None, description="Error type if the test file could not be loaded or parsed")
-    error_reason: str | None = Field(default=None, description="Human readable explanation of the error, only present when error is set")
-
-
 class OOBHit(BaseModel):
-    timestamp: str = Field(description="ISO 8601 timestamp of when the callback was received")
-    source_ip: str = Field(description="IP address that triggered the OOB callback")
-    payload: str = Field(description="The payload that triggered the hit")
-    callback_data: str = Field(description="Raw data received by the OOB listener")
+    timestamp: str = Field(description="ISO 8601 timestamp of when the OOB hit was received")
+    payload: str = Field(description="The payload that triggered the OOB callback")
+    callback_data: str = Field(description="Raw data received by the OOB listener on the callback")
 
 
-class OOBHitsResult(BaseModel):
-    hits: list[OOBHit] = Field(description="List of OOB callbacks received since the last check, empty if none")
-    error: str | None = Field(default=None, description="Error type if the OOB listener could not be reached")
-    error_reason: str | None = Field(default=None, description="Human readable explanation of the error, only present when error is set")
+class Request(BaseModel):
+    sequence_no: int = Field(description="Sequential number of this request within the current test run")
+    timestamp: str = Field(description="ISO 8601 timestamp of when the request was sent")
+    intent: str = Field(description="Human-readable description of what this request is testing")
+    auth_mode_used: Literal["authenticated", "anonymous"] = Field(description="Whether the request was sent with a bearer token or as an anonymous call")
+    raw_request: str = Field(description="Full HTTP request as a string including method, path, headers and body")
+    raw_response: str = Field(description="Full HTTP response as a string including status line, headers and body")
+
+
+class Finding(BaseModel):
+    id: str = Field(description="Unique identifier for this finding, e.g. FINDING-001")
+    owasp_ref: str = Field(description="OWASP API Security Top 10 reference, e.g. API1:2023, or 'custom' / 'exploratory' for non-OWASP findings")
+    severity: Literal["critical", "high", "medium", "low", "info"] = Field(description="Severity level of the finding")
+    status: Literal["confirmed", "suspected"] = Field(description="Whether the finding is confirmed by clear evidence or only suspected")
+    request_sequence_nos: list[int] = Field(description="Sequence numbers of the requests that produced or support this finding")
+    reasoning: str = Field(description="Agent's explanation of why this is a finding, referencing the observed request and response")
+
+
+class AssessmentTestResult(BaseModel):
+    test_id: str = Field(description="Identifier of the test that was run, matching the test registry entry")
+    test_name: str = Field(description="Human-readable name of the test, matching the test registry entry")
+    source: Literal["owasp", "custom", "exploratory"] = Field(description="Origin of the test — from the OWASP list, a custom list, or invented by the agent during the run")
+    auth_mode: Literal["authenticated", "anonymous", "both"] = Field(description="Auth mode used — 'both' means the test was run twice and responses were compared")
+    status: Literal["executed", "blocked", "skipped"] = Field(description="Outcome of the test execution")
+    block_reason: str | None = Field(default=None, description="Reason the test could not be executed — only present when status is 'blocked'")
+    requests: list[Request] = Field(default_factory=list, description="All HTTP requests sent during this test, in sequence order")
+    oob_hits: list[OOBHit] = Field(default_factory=list, description="OOB listener callbacks received during this test, if any")
+    findings: list[Finding] = Field(default_factory=list, description="Findings produced by this test, empty if no issues were detected")
 
 
 ####
@@ -77,13 +76,12 @@ class OOBHitsResult(BaseModel):
 
 
 @tool
-def get_access_token() -> AccessTokenResult:
+def get_oob_listener_hits(payload: str = Field(description="The payload that triggered the hit")) -> list[OOBHit]:
     """
-    Fetch a fresh authentication token for the target service.
-    Returns the header name and fully formatted header value ready to use in requests.
-    Call this once at the start — the result is valid for the duration of the assessment.
+    Get the list of hits received by the out of band listener for a specific payload.
+    When no hit was received then the list is empty.
     """
-    return AccessTokenResult(auth_header_name="Authorization", auth_header_value="Bearer ABCDEF")
+    return []
 
 
 @tool
@@ -93,6 +91,10 @@ def send_http_request(
     host: str = Field(description="Request target host - e.g.www.example.com"),
     headers: dict = Field(description="HTTP headers as a key-value dict, excluding the auth header which is injected separately based on auth_mode"),
     body: str | None = Field(default=None, description="Request body as a string, None for requests with no body"),
+    send_as_authenticated: bool = Field(
+        default=False,
+        description="Indicate if the request must be send as authenticated or as an anonymous",
+    ),
 ) -> HttpRequestResult:
     """
     Send an HTTP request to the target service.
@@ -101,15 +103,20 @@ def send_http_request(
     or an error if the request was blocked or failed.
     Do not retry on error — record the result and move on.
     """
-    current_datetime = datetime.now(timezone.utc).isoformat()
+    current_datetime = datetime.now(UTC).isoformat()
+    req_headers = {}
+    req_headers.update(headers)
     if not is_in_scope(host):
-        return HttpRequestResult(timestamp=datetime.now(timezone.utc).isoformat(), raw_request="", raw_response="", status_code=0, error="scope_violation", error_reason=f"Host {host} is not the target scope!", response_body="", response_headers={})
+        return HttpRequestResult(timestamp=datetime.now(UTC).isoformat(), raw_request="", raw_response="", status_code=0, error="scope_violation", error_reason=f"Host {host} is not the target scope!", response_body="", response_headers={})
+    if send_as_authenticated:
+        access_token = get_access_token()
+        req_headers[access_token[0]] = access_token[1]
 
     url = f"https://{host}{path}"
 
     raw_request = f"{method} {path} HTTP/1.1\n"
     raw_request = f"Host: {host}\n"
-    raw_request += "\n".join(f"{k}: {v}" for k, v in headers.items())
+    raw_request += "\n".join(f"{k}: {v}" for k, v in req_headers.items())
     if body:
         raw_request += f"\n\n{body}"
     response_headers = {}
@@ -122,7 +129,7 @@ def send_http_request(
             request = client.build_request(
                 method=method.upper(),
                 url=url,
-                headers=headers,
+                headers=req_headers,
                 content=body.encode() if body else None,
             )
             response = client.send(request)

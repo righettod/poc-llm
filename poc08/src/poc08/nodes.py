@@ -25,10 +25,15 @@ Execute node
 
 import uuid
 from dataclasses import asdict, dataclass
-from typing import TypedDict
+from string import Template
+from typing import TypedDict, cast
 
-from constants import ASSESSMENT_AGENT_SYSTEM_PROMPT, ASSESSMENT_AGENT_USER_PROMPT, SECURITY_TESTS_FILE
-from utils import load_base_request, load_security_tests
+from langchain.agents import create_agent
+from langchain_ollama import ChatOllama
+
+from .constants import ASSESSMENT_AGENT_MODEL_CALL_TIMEOUT_IN_SECONDS, ASSESSMENT_AGENT_MODEL_NAME, ASSESSMENT_AGENT_MODEL_TEMPERATURE, ASSESSMENT_AGENT_SYSTEM_PROMPT, ASSESSMENT_AGENT_USER_PROMPT, DEBUG, OLLAMA_API_KEY, OLLAMA_HOST, SECURITY_TESTS_FILE
+from .tools import AssessmentTestResult, get_oob_listener_hits, send_http_request
+from .utils import load_base_request, load_security_tests
 
 ####
 # Data container
@@ -95,7 +100,7 @@ class HttpRequest:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: dict) -> "HttpRequest":
+    def from_dict(cls, data: dict) -> HttpRequest:
         """Reconstruct from the dict stored in LangGraph state."""
         return cls(**data)
 
@@ -117,12 +122,75 @@ class WorkflowState(TypedDict):
 
 
 def initialize(state: WorkflowState) -> WorkflowState:
-
     state["oob_web_listener_url"] = "https://righettod.eu"
     state["base_request"] = load_base_request(state["base_request_file_name"])
     state["trace_log_file"] = state["base_request_file_name"].split(".")[0].strip() + "_trace.log"
     state["security_tests"] = load_security_tests(SECURITY_TESTS_FILE)
     state["agent_assessment_system_prompt"] = ASSESSMENT_AGENT_SYSTEM_PROMPT
     state["agent_assessment_user_prompt_template"] = ASSESSMENT_AGENT_USER_PROMPT
+    return state
+
+
+def evaluate(state: WorkflowState) -> WorkflowState:
+    # Model and agent init
+    tools = [send_http_request, get_oob_listener_hits]
+    llm = ChatOllama(
+        model=ASSESSMENT_AGENT_MODEL_NAME,
+        base_url=OLLAMA_HOST,
+        client_kwargs={
+            "headers": {"Authorization": f"Bearer {OLLAMA_API_KEY}"},
+            "timeout": ASSESSMENT_AGENT_MODEL_CALL_TIMEOUT_IN_SECONDS,
+        },
+        temperature=ASSESSMENT_AGENT_MODEL_TEMPERATURE,
+    )
+    agent = create_agent(
+        model=llm,
+        tools=tools,
+        system_prompt=state["agent_assessment_system_prompt"],
+        debug=DEBUG,
+        response_format=AssessmentTestResult,
+    )
+    user_prompt_template = Template(state["agent_assessment_user_prompt_template"])
+    # Handle tests
+    base_request = state["base_request"]
+    security_tests = state["security_tests"]
+    request_sequence = 1
+    security_tests_progress_state = ""
+    security_tests_performed_counter = 0
+    findings_counter = 0
+    security_tests_total = len(security_tests)
+    for security_test in security_tests:
+        test_section_markdown = f"### What to do:\n{security_test['what_to_do']}\n\n### What to look for:\n{security_test['what_to_look_for']}\n\n"
+        user_prompt = user_prompt_template.substitute(
+            method=base_request.method,
+            path=base_request.path,
+            host=base_request.target_host,
+            headers=base_request.headers,
+            body=base_request.body,
+            authentication_mode=security_test["authentication_mode"],
+            oob_listener_url=state["oob_web_listener_url"],
+            test_section_markdown=test_section_markdown,
+            tests_performed=security_tests_performed_counter,
+            tests_total=security_tests_total,
+            findings_count=findings_counter,
+            next_sequence_no=request_sequence,
+            progress_list=security_tests_progress_state,
+        )
+        result = agent.invoke({"messages": [{"role": "user", "content": user_prompt}]})
+        assessment_result = cast(AssessmentTestResult, result)
+        # Increments counters
+        request_sequence += len(assessment_result.requests)
+        current_security_test_finding_count = len(assessment_result.findings)
+        security_tests_performed_counter += 1
+        findings_counter += current_security_test_finding_count
+        additional_info = ""
+        if assessment_result.status == "blocked" and current_security_test_finding_count > 0:
+            additional_info = assessment_result.block_reason
+        elif current_security_test_finding_count > 0:
+            additional_info = f"{current_security_test_finding_count} finding detected"
+        else:
+            additional_info = "no finding"
+        security_tests_progress_state += f"{security_test['name']} - {assessment_result.status} - {additional_info}\n"
+        # TODO handle the response from the state and trace perspective
 
     return state

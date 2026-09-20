@@ -2,8 +2,16 @@
 Contains all constants used across all files
 """
 
+import os
+
+DEBUG = True
+OLLAMA_API_KEY = os.environ.get("OLLAMA_API_KEY")
+OLLAMA_HOST = "https://ollama.com"
 SECURITY_TESTS_FILE = "security_tests.md"
 HTTP_REQUEST_TIMEOUT_IN_SECONDS = 10
+ASSESSMENT_AGENT_MODEL_NAME = ""
+ASSESSMENT_AGENT_MODEL_TEMPERATURE = 0.1
+ASSESSMENT_AGENT_MODEL_CALL_TIMEOUT_IN_SECONDS = 240
 ASSESSMENT_AGENT_SYSTEM_PROMPT = """
 You are an autonomous REST API security assessment agent. Your sole purpose 
 is to execute security tests against a target REST API service, observe 
@@ -132,7 +140,7 @@ $headers
 Body:
 $body
 
-Authentication header: $auth_header_name: $auth_header_value
+Authentication: $authentication_mode
 
 OOB listener: $oob_listener_url
 
