@@ -8,7 +8,13 @@ BaseModel for tool inputs/outputs:
 - You also get runtime validation and clean attribute access
 """
 
+from datetime import datetime, timezone
+
+import httpx
+from constants import HTTP_REQUEST_TIMEOUT_IN_SECONDS
+from langchain_core.tools import tool
 from pydantic import BaseModel, Field
+from utils import is_in_scope
 
 ####
 # Data container
@@ -63,3 +69,73 @@ class OOBHitsResult(BaseModel):
     hits: list[OOBHit] = Field(description="List of OOB callbacks received since the last check, empty if none")
     error: str | None = Field(default=None, description="Error type if the OOB listener could not be reached")
     error_reason: str | None = Field(default=None, description="Human readable explanation of the error, only present when error is set")
+
+
+####
+# Tools
+####
+
+
+@tool
+def get_access_token() -> AccessTokenResult:
+    """
+    Fetch a fresh authentication token for the target service.
+    Returns the header name and fully formatted header value ready to use in requests.
+    Call this once at the start — the result is valid for the duration of the assessment.
+    """
+    return AccessTokenResult(auth_header_name="Authorization", auth_header_value="Bearer ABCDEF")
+
+
+@tool
+def send_http_request(
+    method: str = Field(description="HTTP method — GET, POST, PUT, PATCH, DELETE"),
+    path: str = Field(description="Request path — e.g. /api/v1/user/1"),
+    host: str = Field(description="Request target host - e.g.www.example.com"),
+    headers: dict = Field(description="HTTP headers as a key-value dict, excluding the auth header which is injected separately based on auth_mode"),
+    body: str | None = Field(default=None, description="Request body as a string, None for requests with no body"),
+) -> HttpRequestResult:
+    """
+    Send an HTTP request to the target service.
+    Scope is enforced in code — only the target host is allowed.
+    Returns the full request and response as strings for logging,
+    or an error if the request was blocked or failed.
+    Do not retry on error — record the result and move on.
+    """
+    current_datetime = datetime.now(timezone.utc).isoformat()
+    if not is_in_scope(host):
+        return HttpRequestResult(timestamp=datetime.now(timezone.utc).isoformat(), raw_request="", raw_response="", status_code=0, error="scope_violation", error_reason=f"Host {host} is not the target scope!", response_body="", response_headers={})
+
+    url = f"https://{host}{path}"
+
+    raw_request = f"{method} {path} HTTP/1.1\n"
+    raw_request = f"Host: {host}\n"
+    raw_request += "\n".join(f"{k}: {v}" for k, v in headers.items())
+    if body:
+        raw_request += f"\n\n{body}"
+    response_headers = {}
+    response_body = ""
+    response_code = 0
+    raw_response = ""
+
+    try:
+        with httpx.Client(timeout=HTTP_REQUEST_TIMEOUT_IN_SECONDS, follow_redirects=False) as client:
+            request = client.build_request(
+                method=method.upper(),
+                url=url,
+                headers=headers,
+                content=body.encode() if body else None,
+            )
+            response = client.send(request)
+            response_headers = dict(response.headers)
+            response_body = response.text
+            response_code = response.status_code
+
+        raw_response = f"HTTP/1.1 {response.status_code} {response.reason_phrase}\n"
+        raw_response += "\n".join(f"{k}: {v}" for k, v in response.headers.items())
+        raw_response += f"\n\n{response.text}"
+
+        return HttpRequestResult(timestamp=current_datetime, raw_request=raw_request, raw_response=raw_response, status_code=response_code, response_headers=response_headers, response_body=response_body)
+    except httpx.TimeoutException:
+        return HttpRequestResult(timestamp=current_datetime, raw_request=raw_request, raw_response=raw_response, error="timeout", error_reason=f"Request timed out after {HTTP_REQUEST_TIMEOUT_IN_SECONDS} seconds", status_code=response_code, response_headers=response_headers, response_body=response_body)
+    except httpx.NetworkError as e:
+        return HttpRequestResult(timestamp=current_datetime, raw_request=raw_request, raw_response=raw_response, error="network_error", error_reason=str(e), status_code=response_code, response_headers=response_headers, response_body=response_body)

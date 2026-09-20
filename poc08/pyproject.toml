@@ -9,7 +9,10 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "httpx>=0.28.1",
+    "langchain>=1.4.2",
+    "langchain-core>=1.6.3",
     "langgraph>=1.2.11",
+    "pydantic>=2.13.5",
 ]
 
 [project.scripts]

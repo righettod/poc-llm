@@ -9,6 +9,13 @@ from pathlib import Path
 from nodes import HttpRequest, SecurityTest
 
 
+def is_in_scope(host: str) -> bool:
+    """
+    Indicate if the provided host is part of the scope of the test
+    """
+    return True
+
+
 def load_base_request(file_path: str) -> HttpRequest:
     """Parse a raw HTTP request file (Burp Suite export compatible) into a plain dict.
 

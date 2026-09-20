@@ -7,6 +7,20 @@ TypedDict for LangGraph state:
 - It's a lightweight Python dict with type hints — no validation, no serialization overhead
 - Designed for the graph infrastructure to pass data between nodes
 
+
+Execute node
+│
+├── for each test in test_registry where status == "to_perform"
+│   │
+│   ├── 1. build user prompt (inject current test + progress summary)
+│   ├── 2. invoke ReAct agent (system prompt + user prompt + 4 tools)
+│   ├── 3. parse JSON output from agent
+│   ├── 4. append requests to request_log in state
+│   ├── 5. append findings to findings list in state
+│   └── 6. mark test as executed / blocked / skipped in test_registry
+│
+└── when all tests done → pass to Validate node
+
 """
 
 import uuid
@@ -64,13 +78,13 @@ class SecurityTest(TypedDict):
 
 @dataclass
 class HttpRequest:
+    target_host: str
     path: str
-    http_version: str
+    http_version: str = "HTTP/1.1"
     id: str = str(uuid.uuid4())
     method: str = "GET"
     headers: dict[str, str] = {}
     body: str = ""
-    target_host: str = "HTTP/1.1"
 
     def set_authentication_header(self, header_name: str, header_value: str) -> None:
         """Replace the Authorization header with a fresh bearer token."""

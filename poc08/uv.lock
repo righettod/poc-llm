@@ -242,6 +242,20 @@ wheels = [
 ]
 
 [[package]]
+name = "langchain"
+version = "1.4.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "langgraph" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1c/ff/670036674e669b81c0ddba77e1f012c099eda7b7d1251b973e5367d2824e/langchain-1.4.2.tar.gz", hash = "sha256:5b476418cacbfb8f0da6e63b3b263eefdcec13b48abd6117565a25728ec10b77", size = 735715, upload-time = "2026-09-18T17:31:11.42Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/85/86/cc13651cfda820d96ca8c612538166334935e8cf4331a31f5dd369d27760/langchain-1.4.2-py3-none-any.whl", hash = "sha256:30a27c34cfa0004bf659dcdef488b99a9b90acb08bcc514a5a74264755da536c", size = 163740, upload-time = "2026-09-18T17:31:10.056Z" },
+]
+
+[[package]]
 name = "langchain-core"
 version = "1.6.3"
 source = { registry = "https://pypi.org/simple" }
@@ -424,13 +438,19 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
+    { name = "langchain" },
+    { name = "langchain-core" },
     { name = "langgraph" },
+    { name = "pydantic" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "langchain", specifier = ">=1.4.2" },
+    { name = "langchain-core", specifier = ">=1.6.3" },
     { name = "langgraph", specifier = ">=1.2.11" },
+    { name = "pydantic", specifier = ">=2.13.5" },
 ]
 
 [[package]]

@@ -3,6 +3,7 @@ Contains all constants used across all files
 """
 
 SECURITY_TESTS_FILE = "security_tests.md"
+HTTP_REQUEST_TIMEOUT_IN_SECONDS = 10
 ASSESSMENT_AGENT_SYSTEM_PROMPT = """
 You are an autonomous REST API security assessment agent. Your sole purpose 
 is to execute security tests against a target REST API service, observe 
