@@ -7,9 +7,11 @@ description: Upgrade all direct dependencies of a project to their latest stable
 
 ## Purpose
 
-Security vulnerabilities are increasingly discovered in third-party libraries. The fix is almost always "upgrade to the patched version" — but upgrading is blocked when the project's direct dependencies are pinned to an old range, or when the codebase uses APIs that changed in a newer release. This skill closes that gap: it upgrades every direct dependency to its latest stable release, runs the existing test suite, and — when tests fail — reads the failure output and the relevant source code to produce a concrete diff that restores green tests.
+Security vulnerabilities are increasingly discovered in third-party libraries. The fix is almost always "upgrade to the patched version" — but upgrading is blocked when the project's direct dependencies are pinned to an old range, or when the codebase uses APIs that changed in a newer release. This skill closes that gap: it upgrades every direct dependency to its latest **released** (GA) version, runs the existing test suite, and — when tests fail — reads the failure output and the relevant source code to produce a concrete diff that restores green tests.
 
 **Scope**: direct dependencies only. Transitive (indirect) dependencies are the library authors' responsibility.
+
+**Released versions only**: pre-release versions (alpha, beta, RC, snapshot, dev, milestone, nightly, canary, etc.) are **never** selected as upgrade targets, regardless of the current version pinned in the project. See Step 3 for the full filtering rules.
 
 ---
 
@@ -59,23 +61,45 @@ Summarise what you found: a table of package name → current version specifier.
 
 ---
 
-## Step 3 — Resolve latest stable versions
+## Step 3 — Resolve latest **released** versions
 
-For each direct dependency, find the latest **stable** release (no `-alpha`, `-beta`, `-rc`, `.pre`, `.dev`, `a`, `b`, or `rc` suffixes unless the project itself is pre-release).
+### 3a — Released-only policy (mandatory)
 
-Use the package registry's CLI or public API:
+**Only consider versions that are fully released (GA / Generally Available).** This rule is absolute and applies regardless of what the current version specifier is — even if the project is currently pinned to a pre-release, the upgrade target must still be a released version.
 
-| Ecosystem | How to resolve latest stable |
-|-----------|------------------------------|
-| npm | `npm view <pkg> dist-tags.latest` |
-| PyPI | `pip index versions <pkg>` or `curl https://pypi.org/pypi/<pkg>/json` |
-| Maven | `mvn versions:display-dependency-updates -DprocessDependencyManagement=false` |
-| Gradle | `./gradlew dependencyUpdates` (requires `com.github.ben-manes.versions` plugin) or query Maven Central |
-| Cargo | `cargo search <crate> --limit 1` or parse `cargo update --dry-run` output |
-| Go modules | `go list -m -json -versions <module>` then pick the last non-pre tag |
-| Bundler | `gem list --remote --exact <gem>` or `bundle outdated` |
-| Composer | `composer outdated --direct --format=json` |
-| NuGet | `dotnet list package --outdated` |
+A version is **excluded** if it matches any of the following patterns:
+
+| Ecosystem | Excluded version patterns |
+|-----------|--------------------------|
+| npm | dist-tag is not `latest`; version string contains `-alpha`, `-beta`, `-rc`, `-next`, `-canary`, `-experimental`, `-pre`, `-snapshot` |
+| PyPI | version contains `a`, `b`, `rc`, `.dev`, `.post` segments (PEP 440 pre-/post-release markers); e.g. `2.0a1`, `1.3b2`, `1.0rc1`, `0.9.dev0` |
+| Maven / Gradle | version contains `SNAPSHOT`, `-alpha`, `-Alpha`, `-beta`, `-Beta`, `-RC`, `-M` (milestone), `-EA` (early access), or `.BUILD-SNAPSHOT` |
+| Cargo | version contains `-alpha`, `-beta`, `-rc`, `-pre`, `-nightly`, `-dev` (semver pre-release segment after `-`) |
+| Go modules | version tag contains `-alpha`, `-beta`, `-rc`, `-pre` or is a pseudo-version (`v0.0.0-YYYYMMDDHHMMSS-abcdefabcdef`) |
+| Bundler / RubyGems | gem version has a pre-release segment (`.pre`, `.alpha`, `.beta`, `.rc`, `.dev`) |
+| Composer | version contains `-alpha`, `-beta`, `-RC`, `-patch`, `-dev`, `dev-` prefix (dev branch alias) |
+| NuGet | package version has a pre-release label (any hyphen-separated suffix, e.g. `1.0.0-preview1`, `2.3.0-beta`) |
+
+When querying a registry, **always request only released versions**. Use the filtering flags shown in Step 3b below. If a registry returns mixed results, apply the exclusion patterns above to the list before selecting the latest.
+
+If **no released version exists** for a dependency (the package is still pre-release only), skip it, include it in the final report as "no released version available", and do **not** modify its version specifier.
+
+### 3b — Resolution commands (released versions only)
+
+**Proxy-aware rule (mandatory)**: always use the **package manager CLI** to resolve versions — never call a registry REST API directly (no `curl https://registry.npmjs.org/…`, `curl https://pypi.org/pypi/…`, `curl https://search.maven.org/…`, etc.). The package manager CLI reads the proxy/mirror configuration set at the system or project level (Artifactory, Nexus, Azure Artifacts, etc.), so it automatically routes through whatever artifact proxy the environment has configured. A direct HTTP call bypasses that proxy and will fail or return wrong results in corporate environments.
+
+| Ecosystem | Command (released versions only) | Why this respects the proxy |
+|-----------|----------------------------------|-----------------------------|
+| npm | `npm view <pkg> dist-tags.latest` — the `latest` dist-tag always points to the latest released version; never use `npm view <pkg> version` (returns the newest tag regardless of stability) | Reads `.npmrc` / `NPM_CONFIG_REGISTRY`; routes through the configured registry/proxy |
+| PyPI (pip / uv) | `pip index versions <pkg>` — lists all released versions; apply the 3a exclusion patterns to the output to identify the latest released one | Reads `pip.conf` / `PIP_INDEX_URL` / `UV_INDEX_URL`; routes through the configured index |
+| PyPI (poetry) | `poetry show --outdated` to get the latest released version per package | Reads `pyproject.toml` `[[tool.poetry.source]]`; routes through the configured source |
+| Maven | `mvn versions:display-dependency-updates -DprocessDependencyManagement=false -DallowSnapshots=false -DallowAlphas=false -DallowBetas=false -DallowReleaseProxies=false` | Reads `settings.xml` mirrors and repositories; routes through the configured proxy |
+| Gradle | `./gradlew dependencyUpdates -Drevision=release` (requires `com.github.ben-manes.versions` plugin; `revision=release` excludes all non-release versions) | Reads `build.gradle` repository declarations and `gradle.properties`; routes through the configured proxy |
+| Cargo | `cargo search <crate> --limit 1` returns the latest stable release; verify the version has no pre-release segment | Reads `~/.cargo/config.toml` `[source]` table; routes through the configured registry replacement |
+| Go modules | `go list -m -json -versions <module>` — then filter the output: discard any tag containing `-alpha`, `-beta`, `-rc`, `-pre`, or matching the pseudo-version pattern `v0.0.0-\d{14}-[0-9a-f]{12}` | Reads `GOPROXY` env var; routes through the configured module proxy |
+| Bundler | `bundle outdated --parseable` — excludes pre-release gems by default; never pass `--pre` | Reads `Gemfile` source declarations and `~/.bundle/config`; routes through the configured gem source/proxy |
+| Composer | `composer outdated --direct --format=json` — excludes dev aliases by default; additionally filter out any result whose `latest` field contains `-alpha`, `-beta`, `-RC`, or `dev-` | Reads `composer.json` repositories and `COMPOSER_MIRROR_PATH_REPOS`; routes through the configured repository/proxy |
+| NuGet | `dotnet list package --outdated` — by default excludes pre-release; do **not** add `--include-prerelease` | Reads `NuGet.Config` `packageSources`; routes through the configured feed/proxy |
 
 **Network failure policy — strict**: if any registry call fails due to network unavailability (connection refused, DNS failure, timeout, proxy error, or any other connectivity issue), treat the entire operation as failed:
 1. Report the error clearly: which package(s) could not be resolved and the exact error message.
@@ -85,7 +109,7 @@ Use the package registry's CLI or public API:
 
 A registry call that succeeds but returns "package not found" is a different problem (the package may have been renamed or removed) — report it separately and ask the user how to proceed rather than aborting the whole run.
 
-Build a second table: package name → current version → latest stable version. Mark packages that are already at latest with ✓. If **all** are already at latest, report this and stop — no changes needed.
+Build a second table: package name → current version → latest released version. Mark packages that are already at latest with ✓. If **all** are already at latest, report this and stop — no changes needed.
 
 ---
 
@@ -245,3 +269,6 @@ Include:
 - **No test suite**: if no tests are found, upgrade the dependencies, then warn the user that there is no automated validation and they should test manually.
 - **Pinned transitive deps**: if `requirements.txt` or similar has packages that are clearly transitive (not imported directly in the project's own code), point this out and suggest moving them to a lock file instead of pinning them in the descriptor.
 - **Workspace / monorepo packages**: skip packages whose version is `workspace:*` or similar — these are internal packages, not registry deps.
+- **Currently pinned to a pre-release**: if the project's current version specifier resolves to a pre-release (e.g. `2.0.0-beta.3`), still upgrade to the latest **released** version. Never treat a pre-release current pin as a reason to target another pre-release. If no released version exists for the package at all, skip it and report it as "no released version available".
+- **Version numbers that look stable but aren't**: some ecosystems use convention-breaking version strings (e.g. Maven milestones like `5.0.0.M6`, Go pseudo-versions). Apply the exclusion patterns from Step 3a to catch these even if they don't contain obvious pre-release keywords.
+- **Artifact proxy misconfiguration**: if a resolution command returns "package not found" or a version lower than the one already installed, the artifact proxy (Artifactory, Nexus, etc.) may not have the package cached or the remote repository may not be configured on the proxy. Do **not** fall back to a direct registry HTTP call. Instead, report the issue, name the package manager configuration file where the proxy is declared (e.g. `.npmrc`, `pip.conf`, `settings.xml`, `NuGet.Config`), and ask the user to verify the proxy configuration before retrying.
