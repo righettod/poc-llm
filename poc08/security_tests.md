@@ -8,14 +8,6 @@ Low
 
 Anonymous
 
-## OOB required
-
-False
-
-## OWASP reference
-
-None
-
 ## What to do
 
 Send a the baseline request wittout any authentication headers.
