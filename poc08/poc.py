@@ -533,7 +533,7 @@ def evaluate(state: WorkflowState) -> WorkflowState:
                 security_test_finding_exchanges.append((model_requests_list[security_test_finding_request_sequence_id].raw_request, model_requests_list[security_test_finding_request_sequence_id].raw_response))
             security_test_finding = SecurityTestFinding(id=security_test_finding_id, severity=security_test_finding_severity, status=security_test_finding_status, reasoning=security_test_finding_reasoning, http_exchanges=security_test_finding_exchanges)
             security_test["findings"].append(security_test_finding)
-
+    state["security_tests"] = security_tests
     return state
 
 
